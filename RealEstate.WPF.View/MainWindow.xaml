@@ -1,0 +1,17 @@
+﻿<Window x:Class="RealEstate.WPF.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RealEstate.WPF.ViewModel.ViewModels;assembly=RealEstate.WPF.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        Title="Главная" Height="359" Width="531">
+
+    <Grid Background="#FFFFE0C1">
+        <Label Content="В сети" Height="28" HorizontalAlignment="Left" Margin="12,38,0,0" Name="LbTitleOnline" VerticalAlignment="Top" />
+        <Label Height="28" HorizontalAlignment="Left" Margin="60,34,0,0" Name="LbOnline" VerticalAlignment="Top" FontSize="15" Content="{Binding TbEmployeeName}" Width="215"/>
+        <Button Command="{Binding ShowContractWindow}" Content="Договор" Height="46" HorizontalAlignment="Left" Margin="311,68,0,0" Name="BtnContract" VerticalAlignment="Top" Width="173" FontFamily="Palatino Linotype" FontSize="19" />
+        <Button Command="{Binding ShowClientWindow}" Content="Клиент" Height="43" HorizontalAlignment="Left" Margin="311,120,0,0" Name="BtnClient" VerticalAlignment="Top" Width="173" FontFamily="Palatino Linotype" FontSize="19" />
+        <Button Command="{Binding ShowRealEstateWindow}" Content="Недвижимость" Height="43" HorizontalAlignment="Left" Margin="311,169,0,0" Name="BtnRealEstate" VerticalAlignment="Top" Width="173" FontFamily="Palatino Linotype" FontSize="19" />
+        <Button Command="{Binding ShowWorkerWindow}" Content="Сотрудник" Height="43" HorizontalAlignment="Left" Margin="311,218,0,0" Name="BtnWorker" VerticalAlignment="Top" Width="173" FontFamily="Palatino Linotype" FontSize="19" Visibility="{Binding VisibleProp}" />
+        <Image Height="193" HorizontalAlignment="Left" Margin="32,68,0,0" Name="ImgMain" Stretch="Fill" VerticalAlignment="Top" Width="243" Source="/RealEstate.WPF.View;component/Images/502fff439b7a4fdf9ae0653b868ff48b.jpg" />
+    </Grid>
+</Window>

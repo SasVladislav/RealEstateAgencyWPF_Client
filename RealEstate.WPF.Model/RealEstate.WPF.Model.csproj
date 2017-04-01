@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{79796563-90DE-4562-9556-872A07EBB733}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RealEstate.WPF.Model</RootNamespace>
+    <AssemblyName>RealEstate.WPF.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.Formatting.Extension.5.2.3.0\lib\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\packages\System.Net.Http.2.0.20126.16343\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interfaces\IAccountService.cs" />
+    <Compile Include="Interfaces\IAddressCityService.cs" />
+    <Compile Include="Interfaces\IAddressRegionService.cs" />
+    <Compile Include="Interfaces\IAddressService.cs" />
+    <Compile Include="Interfaces\IAddressStreetService.cs" />
+    <Compile Include="Interfaces\IRealEstateClassService.cs" />
+    <Compile Include="Interfaces\IRealEstateService.cs" />
+    <Compile Include="Interfaces\IRealEstateStatusService.cs" />
+    <Compile Include="Interfaces\IRealEstateTypeService.cs" />
+    <Compile Include="Interfaces\IRealEstateTypeWallService.cs" />
+    <Compile Include="Interfaces\IUserService.cs" />
+    <Compile Include="LocalRepository.cs" />
+    <Compile Include="Models\ModelDTO\AddressCityDTO.cs" />
+    <Compile Include="Models\ModelFilters\AddressCityFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\AddressDTO.cs" />
+    <Compile Include="Models\ModelFilters\AddressFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\AddressRegionDTO.cs" />
+    <Compile Include="Models\ModelFilters\AddressRegionFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\AddressStreetDTO.cs" />
+    <Compile Include="Models\ModelFilters\AddressStreetFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\ContractDTO.cs" />
+    <Compile Include="Models\ModelFilters\ContractFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\ContractTypeDTO.cs" />
+    <Compile Include="Models\ModelFilters\ContractTypeFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\EmployeeDismissDTO.cs" />
+    <Compile Include="Models\ModelFilters\EmployeeDismissFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\EmployeeDTO.cs" />
+    <Compile Include="Models\ModelFilters\EmployeeFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\EmployeePostDTO.cs" />
+    <Compile Include="Models\ModelFilters\EmployeePostFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\EmployeeStatusDTO.cs" />
+    <Compile Include="Models\ModelFilters\EmployeeStatusFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\LoginDto.cs" />
+    <Compile Include="Models\ModelFilters\LoginFilterModel.cs" />
+    <Compile Include="Models\ModelViewDTO\AbstractPersonViewModel.cs" />
+    <Compile Include="Models\ModelViewDTO\EmployeeViewDTO.cs" />
+    <Compile Include="Models\ModelViewDTO\RealEstateFilterViewDTO.cs" />
+    <Compile Include="Models\OperationDetails.cs" />
+    <Compile Include="Models\ModelDTO\PersonAbstractDTO.cs" />
+    <Compile Include="Models\ModelFilters\PersonAbstractFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\RealEstateClassDTO.cs" />
+    <Compile Include="Models\ModelFilters\RealEstateClassFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\RealEstateDTO.cs" />
+    <Compile Include="Models\ModelFilters\RealEstateFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\RealEstateStatusDTO.cs" />
+    <Compile Include="Models\ModelFilters\RealEstateStatusFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\RealEstateTypeDTO.cs" />
+    <Compile Include="Models\ModelFilters\RealEstateTypeFilterModel.cs" />
+    <Compile Include="Models\ModelDTO\RealEstateTypeWallDTO.cs" />
+    <Compile Include="Models\ModelFilters\RealEstateTypeWallFilterModel.cs" />
+    <Compile Include="Models\ModelViewDTO\RealEstateViewDTO.cs" />
+    <Compile Include="Models\ModelFilters\ResponcePackage.cs" />
+    <Compile Include="Models\ModelDTO\UserDTO.cs" />
+    <Compile Include="Models\ModelFilters\UserFilterModel.cs" />
+    <Compile Include="Models\ModelViewDTO\UserViewDTO.cs" />
+    <Compile Include="Models\SendIDToWebApiDTO.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AccountService.cs" />
+    <Compile Include="Services\AddressCitiesService.cs" />
+    <Compile Include="Services\ContractService.cs" />
+    <Compile Include="Services\ContractTypeService.cs" />
+    <Compile Include="Services\EmployeeDismissService.cs" />
+    <Compile Include="Services\EmployeePostService.cs" />
+    <Compile Include="Services\EmployeeService.cs" />
+    <Compile Include="Services\EmployeeStatusService.cs" />
+    <Compile Include="Services\LocalServices\AddressCitiesServiceLocal.cs" />
+    <Compile Include="Services\AddressRegionService.cs" />
+    <Compile Include="Services\LocalServices\AddressRegionServiceLocal.cs" />
+    <Compile Include="Services\AddressService.cs" />
+    <Compile Include="Services\AddressStreetService.cs" />
+    <Compile Include="Services\LocalServices\AddressStreetServiceLocal.cs" />
+    <Compile Include="Services\RealEstateClassService.cs" />
+    <Compile Include="Services\RealEstateService.cs" />
+    <Compile Include="Services\RealEstateStatusService.cs" />
+    <Compile Include="Services\RealEstateTypeService.cs" />
+    <Compile Include="Services\RealEstateTypeWallService.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\LocalServices\UserServiceLocal.cs" />
+    <Compile Include="Services\MainWindowService.cs" />
+    <Compile Include="Services\SendToServerService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

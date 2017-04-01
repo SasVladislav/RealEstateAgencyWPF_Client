@@ -1,0 +1,72 @@
+﻿<Window x:Class="RealEstate.WPF.View.ClientWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Клиент"
+        Height="575.697"
+        Width="685"
+        mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       xmlns:local="clr-namespace:RealEstate.WPF.ViewModel.ViewModels;assembly=RealEstate.WPF.ViewModel"
+        xmlns:my="clr-namespace:RealEstate.WPF.View"
+        Background="#FFEFEFBE">
+    <Grid Margin="5,0,2,0" Height="546" VerticalAlignment="Top">
+        <TextBox Text="{Binding Path=PersonViewModel.TbSurname}" IsEnabled="{Binding Path=ViewMode}" Height="23" HorizontalAlignment="Left" Margin="110,109,0,0" Name="tbSurname" VerticalAlignment="Top" Width="136"  />
+        <TextBox Text="{Binding Path=PersonViewModel.TbName}" IsEnabled="{Binding Path=ViewMode}" Height="22" HorizontalAlignment="Left" Margin="110,141,0,0" Name="tbName" VerticalAlignment="Top" Width="136"/>
+        <TextBox Text="{Binding Path=PersonViewModel.TbPatronumic}" IsEnabled="{Binding Path=ViewMode}" Height="24" HorizontalAlignment="Left" Margin="108,169,0,0" Name="tbPatronymic" VerticalAlignment="Top" Width="136" />
+        <TextBox Text="{Binding Path=PersonViewModel.TbPhoneNumber}" IsEnabled="{Binding Path=ViewMode}" Height="22" HorizontalAlignment="Left" Margin="110,232,0,0" Name="tbPhone" VerticalAlignment="Top" Width="136" />
+        <TextBox Text="{Binding Path=PersonViewModel.AddressViewModel.TbHomeNumber}" IsEnabled="{Binding Path=ViewMode}" Height="24" HorizontalAlignment="Left" Margin="110,364,0,0" x:Name="tbHome" VerticalAlignment="Top" Width="136" />
+        <TextBox Text="{Binding Path=PersonViewModel.AddressViewModel.TbApartmentNumber}" IsEnabled="{Binding Path=ViewMode}" Height="22" HorizontalAlignment="Left" Margin="110,398,0,0" x:Name="tbApartment" VerticalAlignment="Top" Width="136" />
+        <TextBox Text="{Binding Path=PersonViewModel.TbEmail}" IsEnabled="{Binding Path=ViewMode}" Height="24" HorizontalAlignment="Left" Margin="110,432,0,0" Name="tbMail" VerticalAlignment="Top" Width="136" />
+        <Label Content="Фамилия" Height="25" HorizontalAlignment="Left" Margin="38,108,0,0" Name="label1" VerticalAlignment="Top" Width="64" />
+        <Label Content="Имя" Height="25" HorizontalAlignment="Left" Margin="63,138,0,0" Name="label2" VerticalAlignment="Top" Width="39" />
+        <Label Content="Отчество" Height="24" HorizontalAlignment="Left" Margin="36,169,0,0" Name="label3" VerticalAlignment="Top" />
+        <Label Content="Моб. телефон" Height="27" HorizontalAlignment="Left" Margin="9,232,0,0" Name="label4" VerticalAlignment="Top" />
+        <Label Content="Город" Height="26" HorizontalAlignment="Left" Margin="51,264,0,0" x:Name="LbCity" VerticalAlignment="Top" Width="48" />
+        <Label Content="Район" Height="26" HorizontalAlignment="Left" Margin="51,296,0,0" x:Name="LbRegion" VerticalAlignment="Top" Width="45" />
+        <Label Content="Улица" Height="25" HorizontalAlignment="Left" Margin="51,332,0,0" x:Name="LbStreet" VerticalAlignment="Top" />
+        <Label Content="Номер Дома" Height="24" HorizontalAlignment="Left" Margin="14,364,0,0" x:Name="LbHomeNumber" VerticalAlignment="Top" />
+        <Label Content="Номер комнаты" Height="31" HorizontalAlignment="Left" Margin="-3,396,0,0" x:Name="LbApartmentNumber" VerticalAlignment="Top" />
+        <Label Content="E-mail" Height="24" HorizontalAlignment="Left" Margin="51,432,0,0" Name="label5" VerticalAlignment="Top" />
+        <Separator Height="2" HorizontalAlignment="Left" Margin="10,473,0,0" Name="separator1" VerticalAlignment="Top" Width="384" />
+        <Button Command="{Binding Path=BtnNextCommand}" IsEnabled="{Binding Path=BtnViewMode}" Content="&gt;&gt;" Height="23" HorizontalAlignment="Left" Margin="520,489,0,0" Name="btnNext" VerticalAlignment="Top" Width="70" />
+        <Button Command="{Binding Path=BtnBackCommand}" IsEnabled="{Binding Path=BtnViewMode}" Content="&lt;&lt;" Height="23" HorizontalAlignment="Right" Margin="0,489,173,0" Name="btnBack" VerticalAlignment="Top" Width="70" />
+        <TextBox Text="{Binding Path=TbSearch}" Height="23" HorizontalAlignment="Left" Margin="23,67,0,0" Name="tbSearch" VerticalAlignment="Top" Width="221" PreviewTextInput="tbSearch_PreviewTextInput" PreviewKeyDown="tbSearch_PreviewKeyDown" ToolTipService.ToolTip="Поиск может осуществляться по:Фамилии, Имени, Отчеству, Фамилии и Имени,Имени и фамилии, Имени и отчеству, Фамилии и имени и отчеству" />
+        <Button Command="{Binding Path=BtnSaveRecordCommand}" Content="Сохранить" Visibility="{Binding SaveVisibilityMode}" Height="42" HorizontalAlignment="Left" Margin="23,489,0,0" Name="btnChange" VerticalAlignment="Top" Width="146"  />
+        <Button Command="{Binding Path=ShowMainWindow}" Content="&lt; Назад" Height="23" HorizontalAlignment="Left" Margin="5,12,0,0" Name="btnBackPg" VerticalAlignment="Top" Width="75"  />
+        <Button Command="{Binding Path=SearchCommand}" Content="найти" Height="23" HorizontalAlignment="Left" Margin="250,65,0,0" Name="btSearchCln" VerticalAlignment="Top" Width="75"  />
+        <DataGrid AutoGenerateColumns="False" SelectedIndex="{Binding Path=SelectIndexDataGrid}" SelectedItem="{Binding Path=SelectedCurentClientDataGrid}" EnableRowVirtualization="True" Height="421" HorizontalAlignment="Left" ItemsSource="{Binding DataGridListUsers}" Margin="332,47,0,0" Name="clientDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Top" Width="328" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="surnameColumn" Binding="{Binding Path=Person.Surname}" Header="Фамилия" Width="70" />
+                <DataGridTextColumn x:Name="nameColumn" Binding="{Binding Path=Person.Name}" Header="Имя" Width="70" />
+                <DataGridTextColumn x:Name="patronymicColumn" Binding="{Binding Path=Person.Patronumic}" Header="Отчество" Width="70" />
+                <DataGridTextColumn x:Name="emailColumn" Binding="{Binding Path=Person.Email}" Header="E-Mail" Width="110" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Content="Поиск клиента" Height="28" HorizontalAlignment="Left" Margin="23,41,0,0" Name="label8" VerticalAlignment="Top" />
+        <Button Command="{Binding ShowContractWindow}" IsEnabled="{Binding Path=BtnViewMode}" Content="Выбрать клиента" Height="42" HorizontalAlignment="Right" Margin="0,489,284,0" Name="btnSelectClient" VerticalAlignment="Top" Width="136" FontFamily="Comic Sans MS" FontSize="15"/>
+        <Button Command="{Binding Path=BtnChangeRecordCommand}" Visibility="{Binding ChangeVisibilityMode}" Content="Изменить запись"  Height="43" HorizontalAlignment="Left" Margin="23,488,0,0" Name="btnChangeClient" VerticalAlignment="Top" Width="146"/>
+        <ComboBox x:Name="cbxCity" 
+                  ItemsSource="{Binding PersonViewModel.AddressViewModel.Cities}"
+                  DisplayMemberPath="AddressCityName"
+                  SelectedValuePath="AddressCityID"
+                  SelectedValue="{Binding PersonViewModel.AddressViewModel.SelectedCityId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                  IsEnabled="{Binding Path=ViewMode}"
+                  HorizontalAlignment="Left" Margin="110,264,0,0" VerticalAlignment="Top" Width="134"/>
+        <ComboBox x:Name="cbxRegion"
+                  ItemsSource="{Binding PersonViewModel.AddressViewModel.Regions}"
+                  DisplayMemberPath="AddressRegionName"
+                  SelectedValuePath="AddressRegionID"
+                  SelectedValue="{Binding PersonViewModel.AddressViewModel.SelectedRegionId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                  IsEnabled="{Binding ViewMode}"  HorizontalAlignment="Left" Margin="110,300,0,0" VerticalAlignment="Top" Width="134"/>
+        <ComboBox x:Name="cbxStreet"
+                  ItemsSource="{Binding PersonViewModel.AddressViewModel.Streets}"
+                  DisplayMemberPath="AddressStreetName"
+                  SelectedValuePath="AddressStreetID"
+                  SelectedValue="{Binding PersonViewModel.AddressViewModel.SelectedStreetId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                  IsEnabled="{Binding ViewMode}"                  
+                  HorizontalAlignment="Left" Margin="110,332,0,0" VerticalAlignment="Top" Width="134"/>
+        <Label Content="Паспорт" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,198,0,0" />
+        <TextBox Text="{Binding Path=PersonViewModel.TbPassport}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,200,0,0" x:Name="passportTextBox" VerticalAlignment="Top" Width="136" />
+    </Grid>
+</Window>
