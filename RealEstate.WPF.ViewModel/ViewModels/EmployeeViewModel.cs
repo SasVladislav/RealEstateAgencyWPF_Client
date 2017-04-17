@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -198,12 +199,13 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 OnPropertyChanged("CbDismissDate");
             }          
         }
+        private string SelectFire;
         public string CbDismissDateSelected
         {
-            get { return CbDismissDate.LastOrDefault(); }
+            get { return SelectFire; }
             set
             {
-                //EmployeeModel.Dismiss.DismissDate= value;
+                SelectFire = value;
                 OnPropertyChanged("CbDismissDateSelected");
             }
         }
@@ -266,15 +268,20 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         private void InsertTextBoxEmployeeInformation(EmployeeViewDTO employeeModel)
         {
             EmployeePropertyViewModel = EmployeePropertyViewModel ?? new PersonPropertyViewModel<EmployeeDTO>(employeeModel);
-            EmployeePropertyViewModel.InsertComboboxPersonInformation(employeeModel.Person);
+            EmployeePropertyViewModel.InsertComboboxPersonInformation(employeeModel);
+
             SelectedPostId = employeeModel.Person.EmployeePostID;
             SelectedStatusId = employeeModel.Person.EmployeeStatusID;
+
             List<string> listDism = new List<string>();
             EmployeeModel.Dismisses.ForEach(ds => listDism.Add($"{ds.EmploymentDate}-{ds.DismissDate}"));
             CbDismissDate = listDism;
+            CbDismissDateSelected = listDism.LastOrDefault();
+
             this.TbPasswordVisibility = "Hidden";
             this.BtnChangeEmployeeVisibility = "Visible";
             this.BtnSaveChangeVisibility = "Hidden";
+
             this.BtnDismissVisibility = EmployeeModel.Person.EmployeeStatusID == 1 ? "Visible" : "Hidden";
             this.BtnEmploymentVisibility = EmployeeModel.Person.EmployeeStatusID == 2 ? "Visible" : "Hidden";
         }
@@ -287,8 +294,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             this._BtnChangeEmployee = new DelegateCommand(ChangeEmployee);
             this._BtnDismissEmployee = new DelegateCommand(DismissEmployee);
             this._BtnEmploymentEmployee = new DelegateCommand(EmploymentEmployee);
-            
-            InokeAsyncMethods();            
+
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
+            //th.Start();
         }
 
         private async void EmploymentEmployee()
@@ -313,14 +321,14 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             AccessFildsAndButton(false, "Visible", "Hidden");
             await new EmployeeService().UpdateEmployeeRecord(EmployeeModel.Person);
             await new AddressService().UpdateAddressRecord(EmployeeModel.Address);
-            InokeAsyncMethods();
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
 
         private async void SaveNewEmployee()
         {
             AccessFildsAndButton(false, "Visible", "Hidden");
             await new EmployeeService().CreateEmployee(EmployeeModel);
-            InokeAsyncMethods();
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
             //EmployeeModel = new EmployeeViewDTO { Address = new AddressDTO(), Person = new EmployeeDTO(), Dismisses = new List<EmployeeDismissDTO>() };
             //EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(EmployeeModel);
             //InsertTextBoxEmployeeInformation(EmployeeModel);
@@ -333,7 +341,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             InsertTextBoxEmployeeInformation(EmployeeModel);
         }
 
-        private async void InokeAsyncMethods()
+        private async void InokeAsyncMethods(Object stateInfo)
         {
             List<EmployeeViewDTO> listEmployees = new List<EmployeeViewDTO>();
             if (await new EmployeeService().GetAllEmployees()!=null)

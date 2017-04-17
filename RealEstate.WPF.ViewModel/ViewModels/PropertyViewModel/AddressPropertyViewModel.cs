@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
@@ -106,10 +107,10 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         {
 
             AddressModel = addressModel ?? new AddressDTO() ;
-            InvokeAsync();
+            ThreadPool.QueueUserWorkItem(InvokeAsync);
         }
         public event PropertyChangedEventHandler PropertyChanged;
-        private async void InvokeAsync()
+        private async void InvokeAsync(Object state)
         {
             Cities = ToObservableCollection<AddressCityDTO>(await new AddressCitiesService().GetAllCities());
             Regions = ToObservableCollection<AddressRegionDTO>(await new AddressRegionService().GetAllRegions());

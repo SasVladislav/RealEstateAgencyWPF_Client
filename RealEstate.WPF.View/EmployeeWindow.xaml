@@ -72,7 +72,7 @@
 
         <Label Content="Дата поступления" Height="28" HorizontalAlignment="Left" Margin="8,673,0,0" Name="DatePost" VerticalAlignment="Top" />
         <Label Content="Статус" Height="28" HorizontalAlignment="Left"  Name="state" VerticalAlignment="Top" Margin="55,548,0,0" />
-        <DataGrid SelectedIndex="{Binding Path=SelectIndexDataGrid}" SelectedItem="{Binding Path=SelectedCurentEmployeeDataGrid}" AutoGenerateColumns="False" EnableRowVirtualization="True" Height="210" ItemsSource="{Binding Path=DataGridListEmployees}" Margin="235,100,12,0" Name="workerDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Top" IsReadOnly="True">
+        <DataGrid SelectedIndex="{Binding Path=SelectIndexDataGrid}" SelectedItem="{Binding Path=SelectedCurentEmployeeDataGrid, Mode=TwoWay}" AutoGenerateColumns="False" EnableRowVirtualization="True" Height="210" ItemsSource="{Binding Path=DataGridListEmployees}" Margin="235,100,12,0" Name="workerDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Top" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="DolgnostColumn" Binding="{Binding ElementName=cbPost, Path=SelectedItem.EmployeePostName}" Header="Должность" Width="SizeToHeader" />
                 <DataGridTextColumn x:Name="surnameColumn" Binding="{Binding Path=Person.Surname}" Header="Фимилия" Width="SizeToHeader" />

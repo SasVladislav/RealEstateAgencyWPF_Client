@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -36,7 +37,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 if (middleModel.Employee != null)
                 {
                     PersonViewEmployeeModel = new PersonPropertyViewModel<EmployeeDTO>(MiddleModel.Employee??new EmployeeViewDTO {Person=new EmployeeDTO(),Address=new AddressDTO(),Dismisses=new List<EmployeeDismissDTO>() });
-                    InokeAsyncMethods();
+                    ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
                 }                                
             }
         }
@@ -178,8 +179,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             await new ContractService().CreateContract(Contract);
         }
 
-        private async void InokeAsyncMethods()
+        private async void InokeAsyncMethods(Object stateInfo)
         {
+            
             ViewModeUser = MiddleModel.User != null ? false : true;
             ViewModeRealEstate = MiddleModel.RealEstate != null ? false : true;
             TbDateContract=DateTime.Now.ToShortDateString();

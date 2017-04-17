@@ -15,6 +15,7 @@ using RealEstate.WPF.Model.Models.ModelFilters;
 using System.Windows.Input;
 using RealEstate.WPF.ViewModel.Infrastructure;
 using RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel;
+using System.Threading;
 
 namespace RealEstate.WPF.ViewModel.ViewModels
 {
@@ -350,7 +351,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             AccessFildsAndButton(false, "Visible", "Hidden");
             LBoxNotification = (await new RealEstateService().UpdateRealEstateRecord(RealEstateView.RealEstate)).Errors;
             await new AddressService().UpdateAddressRecord(RealEstateView.Address);
-            InokeAsyncMethods();
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
         private string _changeVisibilityMode;
         public string ChangeVisibilityMode
@@ -372,9 +373,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             showContractWindow = new DelegateCommand(ShowContractScreen);
             _nextRecord = new DelegateCommand(BtnNext);
             _backRecord = new DelegateCommand(BtnBack);
-            InokeAsyncMethods();
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
-        private async void InokeAsyncMethods()
+        private async void InokeAsyncMethods(Object stateInfo)
         {
             List<RealEstateViewDTO> list = new List<RealEstateViewDTO>();
             if (await new RealEstateService().GetAllRealEstates() != null)

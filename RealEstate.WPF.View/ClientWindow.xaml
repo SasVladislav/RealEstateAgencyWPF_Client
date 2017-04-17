@@ -35,7 +35,7 @@
         <Button Command="{Binding Path=BtnSaveRecordCommand}" Content="Сохранить" Visibility="{Binding SaveVisibilityMode}" Height="42" HorizontalAlignment="Left" Margin="23,489,0,0" Name="btnChange" VerticalAlignment="Top" Width="146"  />
         <Button Command="{Binding Path=ShowMainWindow}" Content="&lt; Назад" Height="23" HorizontalAlignment="Left" Margin="5,12,0,0" Name="btnBackPg" VerticalAlignment="Top" Width="75"  />
         <Button Command="{Binding Path=SearchCommand}" Content="найти" Height="23" HorizontalAlignment="Left" Margin="250,65,0,0" Name="btSearchCln" VerticalAlignment="Top" Width="75"  />
-        <DataGrid AutoGenerateColumns="False" SelectedIndex="{Binding Path=SelectIndexDataGrid}" SelectedItem="{Binding Path=SelectedCurentClientDataGrid}" EnableRowVirtualization="True" Height="421" HorizontalAlignment="Left" ItemsSource="{Binding DataGridListUsers}" Margin="332,47,0,0" Name="clientDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Top" Width="328" IsReadOnly="True">
+        <DataGrid AutoGenerateColumns="False" SelectedIndex="{Binding Path=SelectIndexDataGrid,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=SelectedCurentClientDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" EnableRowVirtualization="True" Height="421" HorizontalAlignment="Left" ItemsSource="{Binding DataGridListUsers,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="332,47,0,0" Name="clientDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Top" Width="328" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="surnameColumn" Binding="{Binding Path=Person.Surname}" Header="Фамилия" Width="70" />
                 <DataGridTextColumn x:Name="nameColumn" Binding="{Binding Path=Person.Name}" Header="Имя" Width="70" />
@@ -68,5 +68,6 @@
                   HorizontalAlignment="Left" Margin="110,332,0,0" VerticalAlignment="Top" Width="134"/>
         <Label Content="Паспорт" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,198,0,0" />
         <TextBox Text="{Binding Path=PersonViewModel.TbPassport}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,200,0,0" x:Name="passportTextBox" VerticalAlignment="Top" Width="136" />
+        <Label x:Name="label"  Content="{Binding Path=SelectIndexDataGrid}" HorizontalAlignment="Left" Margin="261,19,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
