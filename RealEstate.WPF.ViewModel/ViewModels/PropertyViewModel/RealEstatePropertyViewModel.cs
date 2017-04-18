@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
@@ -24,23 +25,23 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         public RealEstatePropertyViewModel(RealEstateViewDTO realEstateModel)
         {
             RealEstateModel = realEstateModel;            
-            InokeAsyncMethods();
+           ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
         public RealEstateViewDTO GetRealEstate { get {
                 RealEstateModel.RealEstate.RealEstateStatusID = 1;
                 return RealEstateModel; } }
-        private async void InokeAsyncMethods()
+        private async void InokeAsyncMethods(Object state)
         {
             cbClassesSource = ToObservableCollection<RealEstateClassDTO>(await new RealEstateClassService().GetAllRealEstateClasses());
             cbStatusesSource = ToObservableCollection<RealEstateStatusDTO>(await new RealEstateStatusService().GetAllRealEstateStatuses());
             cbTypesSource = ToObservableCollection<RealEstateTypeDTO>(await new RealEstateTypeService().GetAllRealEstateTypes());
             cbTypeWallsSource = ToObservableCollection<RealEstateTypeWallDTO>(await new RealEstateTypeWallService().GetAllRealEstateTypeWalls());
             InsertTextBoxRealEstateInformation(RealEstateModel);            
-            AddressViewModel = new AddressPropertyViewModel(RealEstateModel.Address);
         }
 
         public void InsertTextBoxRealEstateInformation(RealEstateViewDTO realEstate)
         {
+            AddressViewModel = AddressViewModel ?? new AddressPropertyViewModel(realEstate.Address);
             realEstate = realEstate ?? new RealEstateViewDTO();           
             cbTypeIdSelected = realEstate.RealEstate.RealEstateTypeID;
             cbStatusIdSelected = realEstate.RealEstate.RealEstateStatusID;
@@ -52,7 +53,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
             TbGrossArea = realEstate.RealEstate.GrossArea;
             TbNearSubway = realEstate.RealEstate.NearSubway;
             CheckElevator = realEstate.RealEstate.Elevator;
-            
+            AddressViewModel.InsertComboboxAddressInformation(realEstate.Address);
+
         }
 
         private ObservableCollection<T> ToObservableCollection<T>(List<T> list)

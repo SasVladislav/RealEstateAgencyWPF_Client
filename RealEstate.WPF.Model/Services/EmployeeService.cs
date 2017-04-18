@@ -34,5 +34,9 @@ namespace RealEstate.WPF.Model.Services
         {
             return await new SendToServerService<OperationDetails, SendIDToWebApiDTO>().PostDataByJsonObjectAsync("Employee/CreateExistEmployee", new SendIDToWebApiDTO() { IdString = user.PersonId });
         }
+        public async Task<List<EmployeeViewDTO>> FilterEmployeesRecord(EmployeeFilterModel filterModel)
+        {
+            return (await new SendToServerService<List<EmployeeViewDTO>, EmployeeFilterModel>().PostDataByJsonObjectAsync("Employee/FilterEmployee", filterModel)).Result;
+        }
     }
 }

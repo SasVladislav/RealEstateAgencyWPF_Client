@@ -31,7 +31,7 @@ namespace RealEstate.WPF.View
                 ContractWindow contractView = null;
                 ClientWindow clientView = null;
                 RealEstateWindow realEstateView = null;
-                EmployeeWindow workerView = null;
+                EmployeeWindow employeeView = null;
                 // open the Users screen
                 mainVM.ShowContractScreenAction += () =>
                 {
@@ -50,7 +50,7 @@ namespace RealEstate.WPF.View
 
                 mainVM.ShowWorkerScreenAction += () =>
                 {
-                    workerView = NavigationWindows.CreateEmployeeWindow(mainView, workerView, employeeVM, mainVM.MiddleModel);                   
+                    employeeView = NavigationWindows.CreateEmployeeWindow(mainView, employeeView, employeeVM, mainVM.MiddleModel);                   
                 };
                 accountVM.ShowMainScreenAction += () =>
                 {
@@ -85,8 +85,14 @@ namespace RealEstate.WPF.View
                 {
                     realEstateView = NavigationWindows.CreateRealEstateWindow(contractView, realEstateView, realEstateVM, contractVM.MiddleModel);
                 };
-                //employeeVM;
-
+                employeeVM.ShowMainScreenAction += () =>
+                 {
+                mainView = NavigationWindows.CreateMainWindow(employeeView,mainView,mainVM,employeeVM.MiddleModel);
+                 };
+                employeeVM.ShowContractScreenAction += () =>
+                 {
+                     contractView = NavigationWindows.CreateContractWindow(employeeView,contractView,contractVM,employeeVM.MiddleModel);
+                 };
                 //mainView = new MainWindow();
                 //mainView.DataContext = mainVM;
                 //mainView.Show();

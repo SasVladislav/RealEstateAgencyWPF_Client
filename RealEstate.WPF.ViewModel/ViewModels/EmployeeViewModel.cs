@@ -1,4 +1,5 @@
 ﻿using RealEstate.WPF.Model.Models.ModelDTO;
+using RealEstate.WPF.Model.Models.ModelFilters;
 using RealEstate.WPF.Model.Models.ModelViewDTO;
 using RealEstate.WPF.Model.Services;
 using RealEstate.WPF.ViewModel.Infrastructure;
@@ -26,10 +27,47 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         private MiddleClassModel middleModel = null;
         private List<string> emplDismissList = new List<string>();
 
+        
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private DelegateCommand _NewRecord;
-        
+        private DelegateCommand _ShowMainWindow;
+        public event Action ShowMainScreenAction;
+        public ICommand ShowMainWindow
+        {
+            get { return _ShowMainWindow; }
+        }
+
+        private void ShowMainScreen()
+        {
+            if (ShowMainScreenAction != null)
+            {
+                MiddleModel = MiddleModel ?? new MiddleClassModel();
+                ShowMainScreenAction.Invoke();
+            }
+        }
+
+        private DelegateCommand _ShowContractWindow;
+        public event Action ShowContractScreenAction;
+        public ICommand ShowContractWindow
+        {
+            get { return _ShowContractWindow; }
+        }
+
+        private void ShowContractScreen()
+        {
+            if (ShowContractScreenAction != null)
+            {
+                MiddleModel = MiddleModel ?? new MiddleClassModel();
+                ShowContractScreenAction.Invoke();
+            }
+        }
+        private DelegateCommand _searchRecord;
+        public ICommand SearchCommand
+        {
+            get { return _searchRecord; }
+        }
+        private DelegateCommand _NewRecord;       
         public ICommand BtnNewEmployeeCommand
         {
             get { return _NewRecord; }
@@ -189,6 +227,28 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 OnPropertyChanged("SelectedPostId");
             }
         }
+        private int _selectFilterPost;
+        public int SelectedFilterPostId
+        {
+            get { return _selectFilterPost; }
+            set
+            {
+                _selectFilterPost = value;
+                FilterByPost(_selectFilterPost);
+                OnPropertyChanged("SelectedFilterPostId");
+            }
+        }
+        private async void FilterByPost(int postId)
+        {
+            List<EmployeeViewDTO> list = await new EmployeeService().FilterEmployeesRecord(
+                                        new EmployeeFilterModel
+                                        {
+                                            EmployeePostID = postId
+                                        });
+            DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(list);
+            EmployeeModel = SelectedCurentEmployeeDataGrid;
+            EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
+        }
         public List<string> CbDismissDate
         {
             get { 
@@ -207,6 +267,16 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             {
                 SelectFire = value;
                 OnPropertyChanged("CbDismissDateSelected");
+            }
+        }
+        private string tbSearch;
+        public string TbSearch
+        {
+            get { return tbSearch; }
+            set
+            {
+                tbSearch = value;
+                OnPropertyChanged("TbSearch");
             }
         }
         public ObservableCollection<EmployeeStatusDTO> Statuses
@@ -255,12 +325,20 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             get { return EmployeeModel; }
             set
             {
-                if (SelectIndexDataGrid >= 0 && value != null)
+                if (DataGridListEmployees.Count != 0)
                 {
-                    EmployeeModel = value;
-                    InsertTextBoxEmployeeInformation(EmployeeModel);
+                    if (value != null)
+                    {
+                        EmployeeModel = value;
+                    }
+                    else
+                    {
+                        EmployeeModel = new EmployeeViewDTO();
+                    }
                 }
-                else SelectIndexDataGrid = 0;
+                else EmployeeModel = new EmployeeViewDTO();
+                InsertTextBoxEmployeeInformation(EmployeeModel);
+                OnPropertyChanged("SelectedCurentEmployeeDataGrid");
 
             }
         }
@@ -294,9 +372,11 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             this._BtnChangeEmployee = new DelegateCommand(ChangeEmployee);
             this._BtnDismissEmployee = new DelegateCommand(DismissEmployee);
             this._BtnEmploymentEmployee = new DelegateCommand(EmploymentEmployee);
-
+            this._ShowMainWindow = new DelegateCommand(ShowMainScreen);
+            this._ShowContractWindow = new DelegateCommand(ShowContractScreen);
+            this._searchRecord = new DelegateCommand(FilterUser);
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
-            //th.Start();
+
         }
 
         private async void EmploymentEmployee()
@@ -328,10 +408,23 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             AccessFildsAndButton(false, "Visible", "Hidden");
             await new EmployeeService().CreateEmployee(EmployeeModel);
-            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
-            //EmployeeModel = new EmployeeViewDTO { Address = new AddressDTO(), Person = new EmployeeDTO(), Dismisses = new List<EmployeeDismissDTO>() };
-            //EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(EmployeeModel);
-            //InsertTextBoxEmployeeInformation(EmployeeModel);
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);            
+        }
+        private async void FilterUser()
+        {
+            string[] splitList = TbSearch.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+
+            List<EmployeeViewDTO> list = await new EmployeeService().FilterEmployeesRecord(
+                            new EmployeeFilterModel
+                            {
+                                Name = splitList.Count() >= 1 ? splitList[0] : "",
+                                Surname = splitList.Count() >= 2 ? splitList[1] : "",
+                                Patronumic = splitList.Count() == 3 ? splitList[2] : "",
+                                EmployeePostID = SelectedFilterPostId !=0? SelectedFilterPostId:0
+                            });
+            DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(list);
+            EmployeeModel = SelectedCurentEmployeeDataGrid;
+            EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
         }
         private void NewEmployee()
         {
@@ -350,8 +443,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 Posts = ToObservableCollection<EmployeePostDTO>(await new EmployeePostService().GetAllPosts());
                 Statuses = ToObservableCollection<EmployeeStatusDTO>(await new EmployeeStatusService().GetAllStatuses());
                 DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(listEmployees);
-                EmployeeModel = listEmployees.FirstOrDefault();
-                EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(EmployeeModel);
+                EmployeeModel = SelectedCurentEmployeeDataGrid;
+                EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
                 //InsertTextBoxEmployeeInformation(EmployeeModel);
             }
                 

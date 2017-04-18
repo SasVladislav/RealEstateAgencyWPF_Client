@@ -289,7 +289,6 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             UserViewModel = SelectedCurentClientDataGrid;
             
             PersonViewModel = new PersonPropertyViewModel<UserDTO>(SelectedCurentClientDataGrid);
-            //SelectIndexDataGrid = 0;
         }
 
         private void AccessFildsAndButton(bool viewMode,string btnChangeVisibleMode,string btnSaveVisibleMode)

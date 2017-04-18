@@ -286,12 +286,20 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             get { return RealEstateView; }
             set
             {
-                if (SelectIndexDataGrid >= 0 && value != null)
+                if (RealEstateDataGridSource.Count != 0)
                 {
-                    RealEstateView = value;
-                    RealEstatePropertyViewModel.InsertTextBoxRealEstateInformation(RealEstateView);
+                    if (value != null)
+                    {
+                        RealEstateView = value;
+                    }
+                    else
+                    {
+                        RealEstateView = new RealEstateViewDTO();
+                    }
                 }
-                else SelectIndexDataGrid = 0;                
+                else RealEstateView = new RealEstateViewDTO();
+                RealEstatePropertyViewModel.InsertTextBoxRealEstateInformation(RealEstateView);
+                OnPropertyChanged("RealEstateDataGridSelected");
             }
         }
         #endregion
@@ -383,8 +391,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 
                 list = await new RealEstateService().GetAllRealEstates();
                 RealEstateDataGridSource = ToObservableCollection<RealEstateViewDTO>(list);
-                RealEstateView = list.FirstOrDefault();
-                RealEstatePropertyViewModel = new RealEstatePropertyViewModel(RealEstateView);
+                RealEstateView = RealEstateDataGridSelected;
+                RealEstatePropertyViewModel = new RealEstatePropertyViewModel(RealEstateDataGridSelected);
             }
         }
         private void BtnNext()
