@@ -27,8 +27,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         private MiddleClassModel middleModel = null;
         private List<string> emplDismissList = new List<string>();
 
-        
 
+        #region Commands
         public event PropertyChangedEventHandler PropertyChanged;
 
         private DelegateCommand _ShowMainWindow;
@@ -97,6 +97,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             get { return _BtnEmploymentEmployee; }
         }
+        #endregion
+
+        #region Properties
         public PersonPropertyViewModel<EmployeeDTO> EmployeePropertyViewModel
         {
             get { return PersonModel; }
@@ -238,6 +241,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 OnPropertyChanged("SelectedFilterPostId");
             }
         }
+        #endregion
         private async void FilterByPost(int postId)
         {
             List<EmployeeViewDTO> list = await new EmployeeService().FilterEmployeesRecord(
@@ -324,9 +328,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             get { return EmployeeModel; }
             set
-            {
-                if (DataGridListEmployees.Count != 0)
-                {
+            {           
                     if (value != null)
                     {
                         EmployeeModel = value;
@@ -334,19 +336,16 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                     else
                     {
                         EmployeeModel = new EmployeeViewDTO();
-                    }
-                }
-                else EmployeeModel = new EmployeeViewDTO();
+                    }           
                 InsertTextBoxEmployeeInformation(EmployeeModel);
-                OnPropertyChanged("SelectedCurentEmployeeDataGrid");
-
             }
         }
 
         private void InsertTextBoxEmployeeInformation(EmployeeViewDTO employeeModel)
         {
             EmployeePropertyViewModel = EmployeePropertyViewModel ?? new PersonPropertyViewModel<EmployeeDTO>(employeeModel);
-            EmployeePropertyViewModel.InsertComboboxPersonInformation(employeeModel);
+            EmployeePropertyViewModel.InsertComboboxPersonInformation(employeeModel.Person);
+            EmployeePropertyViewModel.AddressViewModel.InsertComboboxAddressInformation(employeeModel.Address);
 
             SelectedPostId = employeeModel.Person.EmployeePostID;
             SelectedStatusId = employeeModel.Person.EmployeeStatusID;
@@ -378,15 +377,31 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
 
         }
-
+        private async void InokeAsyncMethods(Object stateInfo)
+        {
+            List<EmployeeViewDTO> listEmployees = new List<EmployeeViewDTO>();
+            if (await new EmployeeService().GetAllEmployees() != null)
+            {
+                listEmployees = await new EmployeeService().GetAllEmployees();
+                Posts = ToObservableCollection<EmployeePostDTO>(await new EmployeePostService().GetAllPosts());
+                Statuses = ToObservableCollection<EmployeeStatusDTO>(await new EmployeeStatusService().GetAllStatuses());
+                DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(listEmployees);
+                //EmployeeModel = SelectedCurentEmployeeDataGrid;
+                SelectIndexDataGrid = 0;
+                EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
+                //InsertTextBoxEmployeeInformation(EmployeeModel);
+            }
+        }
         private async void EmploymentEmployee()
         {
             await new EmployeeService().EmploymentEmployee(EmployeeModel.Person);
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
 
         private async void DismissEmployee()
         {
             await new EmployeeService().DismissEmployee(EmployeeModel.Person);
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
 
         private void ChangeEmployee()
@@ -399,8 +414,11 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         private async void SaveChangeEmployee()
         {
             AccessFildsAndButton(false, "Visible", "Hidden");
-            await new EmployeeService().UpdateEmployeeRecord(EmployeeModel.Person);
-            await new AddressService().UpdateAddressRecord(EmployeeModel.Address);
+            EmployeeDTO emp = (EmployeeDTO)EmployeePropertyViewModel.GetPerson;
+            emp.EmployeePostID = SelectedPostId;
+            emp.EmployeeStatusID = SelectedStatusId;
+            await new EmployeeService().UpdateEmployeeRecord(emp);
+            await new AddressService().UpdateAddressRecord(EmployeePropertyViewModel.AddressViewModel.GetAddressModel);
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
 
@@ -423,38 +441,28 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                                 EmployeePostID = SelectedFilterPostId !=0? SelectedFilterPostId:0
                             });
             DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(list);
-            EmployeeModel = SelectedCurentEmployeeDataGrid;
+            SelectIndexDataGrid = 0;
+            //EmployeeModel = SelectedCurentEmployeeDataGrid;
             EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
         }
         private void NewEmployee()
         {
             AccessFildsAndButton(true, "Hidden", "Visible");
+            TbPasswordVisibility = "Visible";
+            ChangeVisibilityMode = "Hidden";
             EmployeeModel = new EmployeeViewDTO {Address=new AddressDTO(),Person= new EmployeeDTO(),Dismisses=new List<EmployeeDismissDTO>() };
             EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(EmployeeModel);
             InsertTextBoxEmployeeInformation(EmployeeModel);
         }
 
-        private async void InokeAsyncMethods(Object stateInfo)
-        {
-            List<EmployeeViewDTO> listEmployees = new List<EmployeeViewDTO>();
-            if (await new EmployeeService().GetAllEmployees()!=null)
-            {
-                listEmployees = await new EmployeeService().GetAllEmployees();
-                Posts = ToObservableCollection<EmployeePostDTO>(await new EmployeePostService().GetAllPosts());
-                Statuses = ToObservableCollection<EmployeeStatusDTO>(await new EmployeeStatusService().GetAllStatuses());
-                DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(listEmployees);
-                EmployeeModel = SelectedCurentEmployeeDataGrid;
-                EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
-                //InsertTextBoxEmployeeInformation(EmployeeModel);
-            }
-                
-                      
-        }
-        private void AccessFildsAndButton(bool viewMode, string btnChangeVisibleMode, string btnSaveVisibleMode)
+        
+        private void AccessFildsAndButton(bool viewMode, string btnVisibleFalse, string btnVisibleTrue)
         {
             IsEnableMode(viewMode);
-            //ChangeVisibilityMode = btnChangeVisibleMode;
-            //SaveVisibilityMode = btnSaveVisibleMode;
+
+            //TbPasswordVisibility = btnVisibleTrue.ToString();
+           // ChangeVisibilityMode = btnVisibleFalse.ToString();
+            //SaveVisibilityMode = btnVisibleTrue.ToString();
         }
         private void IsEnableMode(bool viewMode)
         {

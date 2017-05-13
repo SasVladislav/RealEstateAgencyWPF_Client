@@ -18,7 +18,10 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         public PersonPropertyViewModel(AbstractPersonViewModel<T> userViewModel)
         {
             PersonModel = userViewModel.Person as PersonAbstractDTO;
-            InsertComboboxPersonInformation(userViewModel);           
+            AddressViewModel = AddressViewModel ?? new AddressPropertyViewModel(userViewModel.Address);
+            
+            InsertComboboxPersonInformation(PersonModel);
+            AddressViewModel.InsertComboboxAddressInformation(userViewModel.Address);
         }
         public PersonAbstractDTO GetPerson {
             get
@@ -120,17 +123,14 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
                 handler(this, new PropertyChangedEventArgs(PropertyName));
             }
         }
-        public void InsertComboboxPersonInformation(AbstractPersonViewModel<T> user)
-        {
-            AddressViewModel = AddressViewModel ?? new AddressPropertyViewModel(user.Address);
-            var person = user.Person as PersonAbstractDTO;
+        public void InsertComboboxPersonInformation(PersonAbstractDTO person)
+        {          
             TbName = person.Name;
             TbSurname = person.Surname;
             TbPatronumic = person.Patronumic;
             TbPassport = person.PassportNumber;
             TbPhoneNumber = person.PhoneNumber;
-            TbEmail = person.Email;
-            AddressViewModel.InsertComboboxAddressInformation(user.Address);
+            TbEmail = person.Email;          
         }
     }
 }

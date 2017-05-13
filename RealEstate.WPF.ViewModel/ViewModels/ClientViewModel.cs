@@ -23,17 +23,14 @@ namespace RealEstate.WPF.ViewModel.ViewModels
     {       
         private UserViewDTO UserViewModel = new UserViewDTO();
         private PersonPropertyViewModel<UserDTO> PersonModel;
-        
-        private ObservableCollection<UserViewDTO> DgListUsers;       
+                   
 
         private DelegateCommand showContractWindow;      
         private DelegateCommand showMainWindow;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action ShowContractScreenAction;
-        public event Action ShowMainScreenAction;
-        
-        
+        public event Action ShowMainScreenAction;             
         
         #region Commands
         public ICommand ShowContractWindow
@@ -45,7 +42,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             if (ShowContractScreenAction != null)
             {
                 MiddleModel = MiddleModel ?? new MiddleClassModel();
-                MiddleModel.User = UserViewModel;
+                MiddleModel.User = SelectedCurentClientDataGrid;
                 ShowContractScreenAction.Invoke();
             }
         }
@@ -173,63 +170,16 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         }
 
         //--------------DataGrid       
-        public ObservableCollection<UserViewDTO> DataGridListUsers
-        {           
-            get { return DgListUsers; }
-            set
-            {               
-                    DgListUsers = value;
-                    OnPropertyChanged("DataGridListUsers");            
-            }
-        }
+        ObservableCollection<UserViewDTO> dg;
+        public ObservableCollection<UserViewDTO> DataGridListUsers{ get { return dg; }
+            set { dg = value;OnPropertyChanged("DataGridListUsers"); } }
+        int ind;
+        public int SelectIndexDataGrid{ get { return ind; } set { ind = value; OnPropertyChanged("SelectIndexDataGrid"); } }
 
-        private int _selectIndexDataGrid;
-        public int SelectIndexDataGrid
-        {
-            get { return _selectIndexDataGrid; }
-            set
-            {
-                //if (value >= 0)
-                //{
-                    _selectIndexDataGrid = value;
-                //}
-                //else
-                //{
-                //    _selectIndexDataGrid = 0;                   
-                //}
-                OnPropertyChanged("SelectIndexDataGrid");
-            }
-        }
-
-        public UserViewDTO SelectedCurentClientDataGrid
-        {
-            get { return UserViewModel; }
-            set
-            {
-                if (DataGridListUsers.Count != 0)
-                {
-                    if (value != null)
-                    {
-                        UserViewModel = value;
-                    }
-                    else
-                    {
-                         UserViewModel = new UserViewDTO();
-                        //SelectIndexDataGrid =0;
-                        //UserViewModel = DataGridListUsers[SelectIndexDataGrid];
-                        //OnPropertyChanged("SelectedCurentClientDataGrid");
-                        //UserViewModel = DataGridListUsers[0];
-                    }
-                }
-                else UserViewModel = new UserViewDTO();
-
-                InsertTextBoxClientInformation(UserViewModel);
-                OnPropertyChanged("SelectedCurentClientDataGrid");
-
-            }
-        }
+        private UserViewDTO p;
+        public UserViewDTO SelectedCurentClientDataGrid{ get { return p; }
+            set { if (value != null) { p = value; InsertTextBoxClientInformation(p); } } }
         #endregion      
-
         public  ClientViewModel()
         {
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
@@ -241,6 +191,19 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             _backRecord        = new DelegateCommand(BtnBack);
             showMainWindow     = new DelegateCommand(ShowMainScreen);
             showContractWindow = new DelegateCommand(ShowContractScreen);                        
+        }
+        private async void InokeAsyncMethods(Object stateInfo)
+        {
+            List<UserViewDTO> list = new List<UserViewDTO>();
+            if (await new UserService().GetAllUsers() != null)
+            {
+                list = await new UserService().GetAllUsers();
+                DataGridListUsers = ToObservableCollection<UserViewDTO>(list);
+                SelectIndexDataGrid = 0;
+                //UserViewModel = DataGridListUsers[SelectIndexDataGrid];
+                PersonViewModel = new PersonPropertyViewModel<UserDTO>(SelectedCurentClientDataGrid??new UserViewDTO());
+            }
+
         }
         protected void OnPropertyChanged(string PropertyName)
         {
@@ -259,19 +222,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             return observList;
         }
 
-        private async void InokeAsyncMethods(Object stateInfo)
-        {
-            List<UserViewDTO> list = new List<UserViewDTO>();
-            if (await new UserService().GetAllUsers()!=null)
-            {
-                list = await new UserService().GetAllUsers();
-                DataGridListUsers = ToObservableCollection<UserViewDTO>(list);
-                SelectIndexDataGrid = 0;
-                UserViewModel = SelectedCurentClientDataGrid;
-                PersonViewModel = new PersonPropertyViewModel<UserDTO>(SelectedCurentClientDataGrid);
-            }
-                                                   
-        }
+        
 
         private async void FilterUser()
         {
@@ -285,9 +236,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                                 Patronumic = splitList.Count() == 3 ? splitList[2] : ""
                             });
             DataGridListUsers =  ToObservableCollection<UserViewDTO>(list);
-            
-            UserViewModel = SelectedCurentClientDataGrid;
-            
+
+            //UserViewModel = SelectedCurentClientDataGrid;
+            SelectIndexDataGrid = 0;
             PersonViewModel = new PersonPropertyViewModel<UserDTO>(SelectedCurentClientDataGrid);
         }
 
@@ -295,14 +246,14 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             IsEnableMode(viewMode);
             ChangeVisibilityMode = btnChangeVisibleMode;
-              SaveVisibilityMode = btnSaveVisibleMode;
+            SaveVisibilityMode = btnSaveVisibleMode;
         }       
 
         private async void SaveChangedRecord()
         {
             AccessFildsAndButton(false, "Visible", "Hidden");
-            await new UserService().UpdateUserRecord(UserViewModel.Person);
-            await new AddressService().UpdateAddressRecord(UserViewModel.Address);
+            await new UserService().UpdateUserRecord((UserDTO)PersonViewModel.GetPerson);
+            await new AddressService().UpdateAddressRecord(PersonViewModel.AddressViewModel.GetAddressModel);
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
 
@@ -328,8 +279,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         public void InsertTextBoxClientInformation(UserViewDTO user)
         {
             PersonViewModel = PersonViewModel ?? new PersonPropertyViewModel<UserDTO>(user);          
-            PersonViewModel.InsertComboboxPersonInformation(user);  
-                     
+            PersonViewModel.InsertComboboxPersonInformation(user.Person);
+            PersonViewModel.AddressViewModel.InsertComboboxAddressInformation(user.Address);         
         }
     }
 }

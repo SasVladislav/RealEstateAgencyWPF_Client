@@ -174,7 +174,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                                                                                                                                                 Person =(UserDTO)PersonViewModel.GetPerson,
                                                                                                                                                 Address=PersonViewModel.AddressViewModel.GetAddressModel});
 
-            Contract.RealEstateID = MiddleModel.RealEstate != null ? MiddleModel.RealEstate.RealEstate.RealEstateID : await new RealEstateService().CreateRealEstate(RealEstatePropertyViewModel.GetRealEstate);
+            Contract.RealEstateID = MiddleModel.RealEstate != null ? MiddleModel.RealEstate.RealEstate.RealEstateID : await new RealEstateService().CreateRealEstate(
+                                                                                                                                                RealEstatePropertyViewModel.GetRealEstate);
 
             await new ContractService().CreateContract(Contract);
         }

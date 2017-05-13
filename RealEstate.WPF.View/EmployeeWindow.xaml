@@ -11,7 +11,7 @@
     <Grid Width="737">
         <Button Command="{Binding }" Content="&lt;&lt;" Height="22" HorizontalAlignment="Left" Margin="252,724,0,0" Name="btnBack" VerticalAlignment="Top" Width="75"/>
         <Button Command="{Binding }" Content="&gt;&gt;" Height="22" HorizontalAlignment="Right" Margin="0,724,327,0" Name="btnNext" VerticalAlignment="Top" Width="75" />
-        <Button Command="{Binding BtnSaveNewEmployeeCommand}" Visibility="{Binding SaveVisibilityMode}" Content="Сохранить" Height="22" HorizontalAlignment="Right" Margin="0,783,349,0" x:Name="btSaveWorker" VerticalAlignment="Top" Width="122" />
+        <Button Command="{Binding BtnSaveNewEmployeeCommand}" Visibility="{Binding TbPasswordVisibility}" Content="Сохранить" Height="22" HorizontalAlignment="Right" Margin="0,783,349,0" x:Name="btSaveWorker" VerticalAlignment="Top" Width="122" />
         <Button Command="{Binding BtnNewEmployeeCommand}" Visibility="{Binding ChangeVisibilityMode}" Content="Новый сотрудник" Height="22" HorizontalAlignment="Left" Margin="267,782,0,0" Name="btNewWorker" VerticalAlignment="Top" Width="121"  />
         <Image Height="151" HorizontalAlignment="Left" Margin="20,40,0,0" Name="Image" Stretch="Fill" VerticalAlignment="Top" Width="128" />
         <Button Content="Загрузить" Height="23" HorizontalAlignment="Left" Margin="154,169,0,0" Name="btnBrowse" VerticalAlignment="Top" Width="75" />

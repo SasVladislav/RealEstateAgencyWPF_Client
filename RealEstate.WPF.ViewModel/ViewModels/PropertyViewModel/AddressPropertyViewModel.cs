@@ -17,10 +17,32 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         private ObservableCollection<AddressCityDTO> citiesList = new ObservableCollection<AddressCityDTO>();
         private ObservableCollection<AddressRegionDTO> regionsList = new ObservableCollection<AddressRegionDTO>();
         private ObservableCollection<AddressStreetDTO> streetsList = new ObservableCollection<AddressStreetDTO>();
+        public AddressPropertyViewModel()
+        {
 
+        }
+        public AddressPropertyViewModel(AddressDTO addressModel)
+        {
+
+            AddressModel = addressModel ?? new AddressDTO();
+            ThreadPool.QueueUserWorkItem(InvokeAsync);
+        }
+        private async void InvokeAsync(Object state)
+        {
+            Cities = ToObservableCollection<AddressCityDTO>(await new AddressCitiesService().GetAllCities());
+            Regions = ToObservableCollection<AddressRegionDTO>(await new AddressRegionService().GetAllRegions());
+            Streets = ToObservableCollection<AddressStreetDTO>(await new AddressStreetService().GetAllStreets());
+            InsertComboboxAddressInformation(AddressModel);
+        }
         //-------------------Comboboxes
 
-        public AddressDTO GetAddressModel { get { return AddressModel; }}
+        public AddressDTO GetAddressModel
+        {
+            get
+            {
+                return AddressModel;
+            }
+        }
         public ObservableCollection<AddressCityDTO> Cities
         {
             get { return citiesList; }
@@ -99,24 +121,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
                 OnPropertyChanged("TbApartmentNumber");
             }
         }
-        public AddressPropertyViewModel()
-        {
-
-        }
-        public AddressPropertyViewModel(AddressDTO addressModel)
-        {
-
-            AddressModel = addressModel ?? new AddressDTO() ;
-            ThreadPool.QueueUserWorkItem(InvokeAsync);
-        }
+        
         public event PropertyChangedEventHandler PropertyChanged;
-        private async void InvokeAsync(Object state)
-        {
-            Cities = ToObservableCollection<AddressCityDTO>(await new AddressCitiesService().GetAllCities());
-            Regions = ToObservableCollection<AddressRegionDTO>(await new AddressRegionService().GetAllRegions());
-            Streets = ToObservableCollection<AddressStreetDTO>(await new AddressStreetService().GetAllStreets());
-            InsertComboboxAddressInformation(AddressModel);
-        }
+        
         protected void OnPropertyChanged(string PropertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
