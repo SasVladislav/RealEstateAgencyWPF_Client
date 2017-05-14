@@ -17,13 +17,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         private ObservableCollection<AddressCityDTO> citiesList = new ObservableCollection<AddressCityDTO>();
         private ObservableCollection<AddressRegionDTO> regionsList = new ObservableCollection<AddressRegionDTO>();
         private ObservableCollection<AddressStreetDTO> streetsList = new ObservableCollection<AddressStreetDTO>();
-        public AddressPropertyViewModel()
-        {
-
-        }
+        public AddressPropertyViewModel(){}
         public AddressPropertyViewModel(AddressDTO addressModel)
         {
-
             AddressModel = addressModel ?? new AddressDTO();
             ThreadPool.QueueUserWorkItem(InvokeAsync);
         }
@@ -38,10 +34,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
 
         public AddressDTO GetAddressModel
         {
-            get
-            {
-                return AddressModel;
-            }
+            get{return AddressModel;}
         }
         public ObservableCollection<AddressCityDTO> Cities
         {

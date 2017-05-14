@@ -7,12 +7,16 @@
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RealEstate.WPF.ViewModel.Infrastructure;assembly=RealEstate.WPF.ViewModel"
         Background="#FFCAEFCA">
+    <Window.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Window.Resources>
     <Grid Width="737">
         <Button Command="{Binding }" Content="&lt;&lt;" Height="22" HorizontalAlignment="Left" Margin="252,724,0,0" Name="btnBack" VerticalAlignment="Top" Width="75"/>
         <Button Command="{Binding }" Content="&gt;&gt;" Height="22" HorizontalAlignment="Right" Margin="0,724,327,0" Name="btnNext" VerticalAlignment="Top" Width="75" />
-        <Button Command="{Binding BtnSaveNewEmployeeCommand}" Visibility="{Binding TbPasswordVisibility}" Content="Сохранить" Height="22" HorizontalAlignment="Right" Margin="0,783,349,0" x:Name="btSaveWorker" VerticalAlignment="Top" Width="122" />
-        <Button Command="{Binding BtnNewEmployeeCommand}" Visibility="{Binding ChangeVisibilityMode}" Content="Новый сотрудник" Height="22" HorizontalAlignment="Left" Margin="267,782,0,0" Name="btNewWorker" VerticalAlignment="Top" Width="121"  />
+        <Button Command="{Binding BtnSaveNewEmployeeCommand}" Visibility="{Binding BtnSaveNewEmployeeVisibility}" IsEnabled="{Binding IsEnableNewBtn}" Content="Сохранить" Height="22" HorizontalAlignment="Right" Margin="0,783,349,0" x:Name="btSaveWorker" VerticalAlignment="Top" Width="122" />
+        <Button Command="{Binding BtnNewEmployeeCommand}" Visibility="{Binding BtnNewEmployeeVisibility}" IsEnabled="{Binding IsEnableNewBtn}" Content="Новый сотрудник" Height="22" HorizontalAlignment="Left" Margin="266,783,0,0" Name="btNewWorker" VerticalAlignment="Top" Width="122"  />
         <Image Height="151" HorizontalAlignment="Left" Margin="20,40,0,0" Name="Image" Stretch="Fill" VerticalAlignment="Top" Width="128" />
         <Button Content="Загрузить" Height="23" HorizontalAlignment="Left" Margin="154,169,0,0" Name="btnBrowse" VerticalAlignment="Top" Width="75" />
         <Button Command="{Binding ShowMainWindow}" Content="назад" Height="27" HorizontalAlignment="Left" Margin="20,8,0,0" Name="btnbkpage" VerticalAlignment="Top" Width="75"  />
@@ -30,45 +34,45 @@
             DisplayMemberPath="EmployeePostName"
             SelectedValuePath="EmployeePostID"
             SelectedValue="{Binding SelectedPostId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsEnabled="{Binding ViewMode}"
+            IsEnabled="{Binding IsEnabledForFields}"
             Height="23" HorizontalAlignment="Left" Margin="109,207,0,0" Name="cbPost" VerticalAlignment="Top" Width="120" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbSurname}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,238,0,0" Name="surnameTextBox" VerticalAlignment="Top" Width="120" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbName}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,265,0,0" Name="nameTextBox" VerticalAlignment="Top" Width="120" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbPatronumic}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,294,0,0" Name="patronymicTextBox" VerticalAlignment="Top" Width="120" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbPhoneNumber}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,323,0,0" Name="phoneNumberTextBox" VerticalAlignment="Top" Width="120" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbPassport}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,352,0,0" Name="passportTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbSurname}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="109,238,0,0" Name="surnameTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbName}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="109,265,0,0" Name="nameTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbPatronumic}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="109,294,0,0" Name="patronymicTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbPhoneNumber}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="109,323,0,0" Name="phoneNumberTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbPassport}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="109,352,0,0" Name="passportTextBox" VerticalAlignment="Top" Width="120" />
         <ComboBox x:Name="cbxCity" 
             ItemsSource="{Binding EmployeePropertyViewModel.AddressViewModel.Cities}"
             DisplayMemberPath="AddressCityName"
             SelectedValuePath="AddressCityID"
             SelectedValue="{Binding EmployeePropertyViewModel.AddressViewModel.SelectedCityId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsEnabled="{Binding ViewMode}"
+            IsEnabled="{Binding IsEnabledForFields}"
             HorizontalAlignment="Left" Margin="109,386,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox x:Name="cbxRegion"
             ItemsSource="{Binding EmployeePropertyViewModel.AddressViewModel.Regions}"
             DisplayMemberPath="AddressRegionName"
             SelectedValuePath="AddressRegionID"
             SelectedValue="{Binding EmployeePropertyViewModel.AddressViewModel.SelectedRegionId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsEnabled="{Binding ViewMode}"  HorizontalAlignment="Left" Margin="109,421,0,0" VerticalAlignment="Top" Width="120"/>
+            IsEnabled="{Binding IsEnabledForFields}"  HorizontalAlignment="Left" Margin="109,421,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox x:Name="cbxStreet"
             ItemsSource="{Binding EmployeePropertyViewModel.AddressViewModel.Streets}"
             DisplayMemberPath="AddressStreetName"
             SelectedValuePath="AddressStreetID"
             SelectedValue="{Binding EmployeePropertyViewModel.AddressViewModel.SelectedStreetId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsEnabled="{Binding ViewMode}"                  
+            IsEnabled="{Binding IsEnabledForFields}"                  
             HorizontalAlignment="Left" Margin="109,454,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBox Text="{Binding EmployeePropertyViewModel.AddressViewModel.TbHomeNumber}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,486,0,0" x:Name="tbHome" VerticalAlignment="Top" Width="122" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.AddressViewModel.TbApartmentNumber}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="109,519,0,0" x:Name="tbApartment" VerticalAlignment="Top" Width="122" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.AddressViewModel.TbHomeNumber}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="109,486,0,0" x:Name="tbHome" VerticalAlignment="Top" Width="122" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.AddressViewModel.TbApartmentNumber}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="109,519,0,0" x:Name="tbApartment" VerticalAlignment="Top" Width="122" />
         <ComboBox
             ItemsSource="{Binding Statuses}"
             DisplayMemberPath="EmployeeStatusName"
             SelectedValuePath="EmployeeStatusID"
             SelectedValue="{Binding SelectedStatusId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            IsEnabled="{Binding ViewMode}"
+            IsEnabled="{Binding IsEnabledForFields}"
             Height="23" HorizontalAlignment="Left" Margin="109,551,0,0" Name="cbStatusWorker" VerticalAlignment="Top" Width="122" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbRole}" Visibility="{Binding TbPasswordVisibility}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="110,611,0,0" Name="loginTextBox" VerticalAlignment="Top" Width="120" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbEmail}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="110,582,0,0" Name="emailTextBox" VerticalAlignment="Top" Width="120" />
-        <TextBox Text="{Binding EmployeePropertyViewModel.TbPassword}" Visibility="{Binding TbPasswordVisibility}" Height="23" HorizontalAlignment="Left" Margin="110,642,0,0" Name="passwordTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbEmail}" IsEnabled="{Binding IsEnabledForFields}" Height="23" HorizontalAlignment="Left" Margin="110,582,0,0" Name="emailTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbRole}" Visibility="{Binding Path=TbPasswordVisibility,Mode=Twoway, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding ViewMode}" Height="23" HorizontalAlignment="Left" Margin="110,611,0,0" Name="loginTextBox" VerticalAlignment="Top" Width="120" />
+        <TextBox Text="{Binding EmployeePropertyViewModel.TbPassword}" Visibility="{Binding Path=TbPasswordVisibility,Mode=Twoway, UpdateSourceTrigger=PropertyChanged}" Height="23" HorizontalAlignment="Left" Margin="110,642,0,0" Name="passwordTextBox" VerticalAlignment="Top" Width="120" />
 
         <Label Content="Дата поступления" Height="28" HorizontalAlignment="Left" Margin="8,673,0,0" Name="DatePost" VerticalAlignment="Top" />
         <Label Content="Статус" Height="28" HorizontalAlignment="Left"  Name="state" VerticalAlignment="Top" Margin="55,548,0,0" />
@@ -84,7 +88,6 @@
                 <DataGridTextColumn x:Name="emailColumn" Binding="{Binding Path=Person.Email}" Header="E-mail" Width="SizeToHeader" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Command="{Binding BtnSaveChangeEmployeeCommand}" Visibility="{Binding BtnSaveChangeVisibility}" Content="Сохранить" Height="24" HorizontalAlignment="Left" Margin="266,754,0,0" Name="btSaveChange" VerticalAlignment="Top" Width="122"  />
         <TextBox Text="{Binding Path=TbSearch}" Height="23" HorizontalAlignment="Left" Margin="235,34,0,0" Name="tbSearchWorker" VerticalAlignment="Top" Width="342" />
         <Button Command="{Binding SearchCommand}" Content="Поиск" Height="23" HorizontalAlignment="Left" Margin="598,34,0,0" Name="btSearchWorker" VerticalAlignment="Top" Width="75"  />
         <Label Content="Статистика Сотрудника" Height="28" HorizontalAlignment="Left" Margin="367,316,0,0" Name="label1" VerticalAlignment="Top" />
@@ -123,10 +126,11 @@
         <TextBox Height="23" Margin="0,618,168,0" Name="tbfiltrecordpo" VerticalAlignment="Top" HorizontalAlignment="Right" Width="84" />
         <Button Content="Фильтровать" Height="23" HorizontalAlignment="Left" Margin="613,616,0,0" Name="button1" VerticalAlignment="Top" Width="89" />
         <Label Content="Дата увольнения" Height="28" HorizontalAlignment="Left" Margin="126,673,0,0" Name="label11" VerticalAlignment="Top" />
-        <Button Command="{Binding BtnEmploymentEmployeeCommand}" Visibility="{Binding BtnEmploymentVisibility}" Content="Вернуть на работу" Height="24" HorizontalAlignment="Left" Margin="266,810,0,0" Name="btpostuplenie" VerticalAlignment="Top" Width="122" />
-        <Button Command="{Binding BtnDismissEmployeeCommand}" Visibility="{Binding BtnDismissVisibility}" Content="Уволить" Height="24" HorizontalAlignment="Left" Margin="267,810,0,0" Name="btuvolnenie" VerticalAlignment="Top" Width="122"  />
+        <Button Command="{Binding BtnEmploymentEmployeeCommand}" Visibility="{Binding BtnEmploymentVisibility}" IsEnabled="{Binding IsEnableDismissBtn}" Content="Вернуть на работу" Height="24" HorizontalAlignment="Left" Margin="266,810,0,0" Name="btpostuplenie" VerticalAlignment="Top" Width="122" />
+        <Button Command="{Binding BtnDismissEmployeeCommand}" Visibility="{Binding BtnDismissVisibility}" IsEnabled="{Binding IsEnableDismissBtn}" Content="Уволить" Height="24" HorizontalAlignment="Left" Margin="266,810,0,0" Name="btuvolnenie" VerticalAlignment="Top" Width="122"  />
         <CheckBox Content="Доступ к уволеным сотрудникам" Height="16" HorizontalAlignment="Left" Margin="527,316,0,0" Name="chbDostupuvoln" VerticalAlignment="Top" />
-        <Button Command="{Binding BtnChangeEmployeeCommand}" Visibility="{Binding BtnChangeEmployeeVisibility}" Content="Изменить запись" Height="24" HorizontalAlignment="Left" Margin="266,754,0,0" Name="btChange" VerticalAlignment="Top" Width="122" />
+        <Button Command="{Binding BtnSaveChangeEmployeeCommand}" Visibility="{Binding BtnSaveChangeVisibility}" IsEnabled="{Binding IsEnableChangeBtn}" Content="Сохранить" Height="24" HorizontalAlignment="Left" Margin="266,754,0,0" Name="btSaveChange" VerticalAlignment="Top" Width="122"  />
+        <Button Command="{Binding BtnChangeEmployeeCommand}" Visibility="{Binding BtnChangeEmployeeVisibility}" IsEnabled="{Binding IsEnableChangeBtn}" Content="Изменить запись" Height="24" HorizontalAlignment="Left" Margin="266,754,0,0" x:Name="btChange" VerticalAlignment="Top" Width="122" />
         <Label Content="Город:" Height="25" HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="56,385,0,0" x:Name="LbCity" Width="48" />
         <Label Content="Район:" Height="25" HorizontalAlignment="Left" Margin="55,418,0,0" x:Name="LbRegion" VerticalAlignment="Top" Width="49" />
         <Label Content="Улица:" Height="26" HorizontalAlignment="Left" Margin="55,453,0,0" x:Name="LbStreet" VerticalAlignment="Top" />
@@ -136,5 +140,6 @@
                   ItemsSource="{Binding CbDismissDate}"
                   SelectedItem="{Binding CbDismissDateSelected}"
                   HorizontalAlignment="Left" Margin="12,701,0,0" VerticalAlignment="Top" Width="217"/>
+        
     </Grid>
 </Window>

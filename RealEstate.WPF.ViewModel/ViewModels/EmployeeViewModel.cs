@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RealEstate.WPF.ViewModel.ViewModels
@@ -150,8 +151,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         }
 
         
-        private string _tbPasswordVisibility;
-        public string TbPasswordVisibility
+        private Visibility _tbPasswordVisibility;
+        public Visibility TbPasswordVisibility
         {
             get { return _tbPasswordVisibility; }
             set
@@ -170,45 +171,67 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 OnPropertyChanged("BtnEmploymentVisibility");
             }
         }
-        private string _changeVisibilityMode;
-        public string ChangeVisibilityMode
+        private string _btnNewEmployeeVisibility;
+        public string BtnNewEmployeeVisibility
         {
-            get { return _changeVisibilityMode; }
+            get { return _btnNewEmployeeVisibility; }
             set
             {
-                _changeVisibilityMode = value;
-                OnPropertyChanged("ChangeVisibilityMode");
+                _btnNewEmployeeVisibility = value;
+                OnPropertyChanged("BtnNewEmployeeVisibility");
             }
         }
-        private string _saveVisibilityMode;
-        public string SaveVisibilityMode
+        private string _btnSaveNewEmployeeVisibility;
+        public string BtnSaveNewEmployeeVisibility
         {
-            get { return _saveVisibilityMode; }
+            get { return _btnSaveNewEmployeeVisibility; }
             set
             {
-                _saveVisibilityMode = value;
-                OnPropertyChanged("SaveVisibilityMode");
-            }
-        }
-        private bool _viewMode;
-        public bool ViewMode
-        {
-            get { return _viewMode; }
-            set
-            {
-                _viewMode = value;
-                OnPropertyChanged("ViewMode");
+                _btnSaveNewEmployeeVisibility = value;
+                OnPropertyChanged("BtnSaveNewEmployeeVisibility");
             }
         }
 
-        private bool _btnViewMode;
-        public bool BtnViewMode
+        private bool _isEnabledForFields;
+        public bool IsEnabledForFields
         {
-            get { return _btnViewMode; }
+            get { return _isEnabledForFields; }
             set
             {
-                _btnViewMode = value;
-                OnPropertyChanged("BtnViewMode");
+                _isEnabledForFields = value;
+                OnPropertyChanged("IsEnabledForFields");
+            }
+        }
+        
+        private bool _isEnableChangeBtn;
+        public bool IsEnableChangeBtn
+        {
+            get { return _isEnableChangeBtn; }
+            set
+            {
+                _isEnableChangeBtn = value;
+                OnPropertyChanged("IsEnableChangeBtn");
+            }
+        }
+
+        private bool _isEnableNewBtn;
+        public bool IsEnableNewBtn
+        {
+            get { return _isEnableNewBtn; }
+            set
+            {
+                _isEnableNewBtn = value;
+                OnPropertyChanged("IsEnableNewBtn");
+            }
+        }
+        private bool _isEnableDismissBtn;
+        public bool IsEnableDismissBtn
+        {
+            get { return _isEnableDismissBtn; }
+            set
+            {
+                _isEnableDismissBtn = value;
+                OnPropertyChanged("IsEnableDismissBtn");
             }
         }
         public ObservableCollection<EmployeePostDTO> Posts
@@ -355,7 +378,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             CbDismissDate = listDism;
             CbDismissDateSelected = listDism.LastOrDefault();
 
-            this.TbPasswordVisibility = "Hidden";
+            this.TbPasswordVisibility = Visibility.Hidden;
             this.BtnChangeEmployeeVisibility = "Visible";
             this.BtnSaveChangeVisibility = "Hidden";
 
@@ -389,7 +412,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 //EmployeeModel = SelectedCurentEmployeeDataGrid;
                 SelectIndexDataGrid = 0;
                 EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
-                //InsertTextBoxEmployeeInformation(EmployeeModel);
+                AccessFildsAndButton(false);
             }
         }
         private async void EmploymentEmployee()
@@ -406,14 +429,15 @@ namespace RealEstate.WPF.ViewModel.ViewModels
 
         private void ChangeEmployee()
         {
-            AccessFildsAndButton(true, "Hidden", "Visible");
+            AccessFildsAndButton(true);
+            IsEnableChangeBtn = true;
             BtnChangeEmployeeVisibility = "Hidden";
             BtnSaveChangeVisibility = "Visible";
         }
 
         private async void SaveChangeEmployee()
         {
-            AccessFildsAndButton(false, "Visible", "Hidden");
+            AccessFildsAndButton(false);
             EmployeeDTO emp = (EmployeeDTO)EmployeePropertyViewModel.GetPerson;
             emp.EmployeePostID = SelectedPostId;
             emp.EmployeeStatusID = SelectedStatusId;
@@ -421,13 +445,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             await new AddressService().UpdateAddressRecord(EmployeePropertyViewModel.AddressViewModel.GetAddressModel);
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
-
-        private async void SaveNewEmployee()
-        {
-            AccessFildsAndButton(false, "Visible", "Hidden");
-            await new EmployeeService().CreateEmployee(EmployeeModel);
-            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);            
-        }
+        
         private async void FilterUser()
         {
             string[] splitList = TbSearch.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
@@ -447,27 +465,32 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         }
         private void NewEmployee()
         {
-            AccessFildsAndButton(true, "Hidden", "Visible");
-            TbPasswordVisibility = "Visible";
-            ChangeVisibilityMode = "Hidden";
+            AccessFildsAndButton(true);
+            IsEnableNewBtn = true;            
+            BtnNewEmployeeVisibility = "Hidden";
+            BtnSaveNewEmployeeVisibility = "Visible";
             EmployeeModel = new EmployeeViewDTO {Address=new AddressDTO(),Person= new EmployeeDTO(),Dismisses=new List<EmployeeDismissDTO>() };
             EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(EmployeeModel);
             InsertTextBoxEmployeeInformation(EmployeeModel);
+            TbPasswordVisibility = Visibility.Visible;
+        }
+        private async void SaveNewEmployee()
+        {
+            AccessFildsAndButton(false);
+            await new EmployeeService().CreateEmployee(EmployeeModel);
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
 
-        
-        private void AccessFildsAndButton(bool viewMode, string btnVisibleFalse, string btnVisibleTrue)
+        private void AccessFildsAndButton(bool viewMode)
         {
             IsEnableMode(viewMode);
-
-            //TbPasswordVisibility = btnVisibleTrue.ToString();
-           // ChangeVisibilityMode = btnVisibleFalse.ToString();
-            //SaveVisibilityMode = btnVisibleTrue.ToString();
         }
         private void IsEnableMode(bool viewMode)
         {
-            ViewMode = viewMode;
-            BtnViewMode = !viewMode;
+            IsEnabledForFields = viewMode;
+            IsEnableChangeBtn = !viewMode;
+            IsEnableNewBtn = !viewMode;
+            IsEnableDismissBtn = !viewMode;
         }
         private ObservableCollection<T> ToObservableCollection<T>(List<T> list)
         {
