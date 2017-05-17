@@ -86,14 +86,14 @@
         <Label Content="Фамилия:" Height="23" HorizontalAlignment="Left" Margin="319,417,0,289" VerticalAlignment="Center" />
         <Label Content="Имя:" HorizontalAlignment="Left" Margin="346,443,0,258" VerticalAlignment="Center" Height="28" />
         <Label Content="Отчество:" HorizontalAlignment="Left" Margin="319,472,0,227" VerticalAlignment="Center" Height="30" />
-        <TextBox Text="{Binding PersonViewEmployeeModel.TbSurname}" IsEnabled="False" Height="23" HorizontalAlignment="Left" Margin="388,419,0,0" Name="surnameTextBox" VerticalAlignment="Top" Width="120" IsReadOnly="True" />
+        <TextBox Text="{Binding PersonViewEmployeeModel.TbSurname}" IsEnabled="False" Height="23" HorizontalAlignment="Left" Margin="386,419,0,0" Name="surnameTextBox" VerticalAlignment="Top" Width="120" IsReadOnly="True" />
         <TextBox Text="{Binding PersonViewEmployeeModel.TbName}" IsEnabled="False" Height="23" HorizontalAlignment="Left" Margin="386,448,0,0" Name="nameTextBox" VerticalAlignment="Top" Width="120" IsReadOnly="True" />
         <TextBox Text="{Binding PersonViewEmployeeModel.TbPatronumic}" IsEnabled="False" Height="23" HorizontalAlignment="Left" Margin="386,474,0,0" Name="patronymicTextBox" VerticalAlignment="Top" Width="120" IsReadOnly="True" />
         <Label Content="Недвижимость" Height="34" HorizontalAlignment="Left" Margin="61,62,0,0" Name="label8" VerticalAlignment="Top" FontSize="17" />
         <Label Content="Клиент" Height="28" HorizontalAlignment="Left" Margin="390,62,0,0" Name="label9" VerticalAlignment="Top" FontSize="17" />
         <Label Content="Сотрудник" Height="33" HorizontalAlignment="Left" Margin="362,378,0,0" Name="label10" VerticalAlignment="Top" FontSize="17" />
         <Label Content="Тип Договора" Height="28" HorizontalAlignment="Left" Margin="304,593,0,0" Name="label11" VerticalAlignment="Top" FontSize="12" />
-        <TextBox Text="{Binding TbDateContract}" IsEnabled="False" Height="28" Margin="402,626,0,0" Name="tbDareRecord" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="106" />
+        <TextBox Text="{Binding TbDateContract}" IsEnabled="False" Height="24" Margin="402,626,0,0" Name="tbDareRecord" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="106" />
         <Label Content="Дата заполнения" Height="28" HorizontalAlignment="Left" Margin="283,626,0,0" Name="label12" VerticalAlignment="Top" FontSize="12" />
         <Button Command="{Binding SaveContract}" Content="Сохранить" Height="40" HorizontalAlignment="Left" Margin="50,669,0,0" Name="btsave" VerticalAlignment="Top" Width="138" FontSize="17" Click="btsave_Click" />
         <Button Content="Очистить поля" Height="23" HorizontalAlignment="Left" Margin="142,640,0,0" Name="CleanPole" VerticalAlignment="Top" Width="96" Click="CleanPole_Click" />

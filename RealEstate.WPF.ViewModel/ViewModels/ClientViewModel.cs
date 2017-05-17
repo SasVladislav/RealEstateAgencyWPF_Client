@@ -171,14 +171,24 @@ namespace RealEstate.WPF.ViewModel.ViewModels
 
         //--------------DataGrid       
         ObservableCollection<UserViewDTO> dg;
-        public ObservableCollection<UserViewDTO> DataGridListUsers{ get { return dg; }
-            set { dg = value;OnPropertyChanged("DataGridListUsers"); } }
+        public ObservableCollection<UserViewDTO> DataGridListUsers
+        {
+            get { return dg; }
+            set { dg = value;OnPropertyChanged("DataGridListUsers"); }
+        }
         int ind;
-        public int SelectIndexDataGrid{ get { return ind; } set { ind = value; OnPropertyChanged("SelectIndexDataGrid"); } }
+        public int SelectIndexDataGrid
+        {
+            get { return ind; }
+            set { ind = value; OnPropertyChanged("SelectIndexDataGrid"); }
+        }
 
         private UserViewDTO p;
-        public UserViewDTO SelectedCurentClientDataGrid{ get { return p; }
-            set { if (value != null) { p = value; InsertTextBoxClientInformation(p); } } }
+        public UserViewDTO SelectedCurentClientDataGrid
+        {
+            get { return p; }
+            set { if (value != null) { p = value; InsertTextBoxClientInformation(p); } }
+        }
         #endregion      
         public  ClientViewModel()
         {
@@ -253,7 +263,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             AccessFildsAndButton(false, "Visible", "Hidden");
             await new UserService().UpdateUserRecord((UserDTO)PersonViewModel.GetPerson);
-            await new AddressService().UpdateAddressRecord(PersonViewModel.AddressViewModel.GetAddressModel);
+            await new AddressService().UpdateAddressRecord(PersonViewModel.AddressViewModel.GetAddressModel.Address);
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
 
@@ -280,7 +290,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             PersonViewModel = PersonViewModel ?? new PersonPropertyViewModel<UserDTO>(user);          
             PersonViewModel.InsertComboboxPersonInformation(user.Person);
-            PersonViewModel.AddressViewModel.InsertComboboxAddressInformation(user.Address);         
+            PersonViewModel.AddressViewModel.InsertComboboxAddressInformation(user.AddressView);         
         }
     }
 }

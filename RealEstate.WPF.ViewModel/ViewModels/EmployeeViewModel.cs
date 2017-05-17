@@ -23,8 +23,10 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         private ObservableCollection<EmployeePostDTO> postsList = new ObservableCollection<EmployeePostDTO>();
         private ObservableCollection<EmployeeStatusDTO> statusesList = new ObservableCollection<EmployeeStatusDTO>();
         private EmployeeViewDTO EmployeeModel = new EmployeeViewDTO();
+        private ContractViewDTO ContractModel = new ContractViewDTO();
         private PersonPropertyViewModel<EmployeeDTO> PersonModel;
         private ObservableCollection<EmployeeViewDTO> DgListEmployees;
+        private ObservableCollection<ContractViewDTO> DgListContracts;
         private MiddleClassModel middleModel = null;
         private List<string> emplDismissList = new List<string>();
 
@@ -264,27 +266,18 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 OnPropertyChanged("SelectedFilterPostId");
             }
         }
-        #endregion
-        private async void FilterByPost(int postId)
-        {
-            List<EmployeeViewDTO> list = await new EmployeeService().FilterEmployeesRecord(
-                                        new EmployeeFilterModel
-                                        {
-                                            EmployeePostID = postId
-                                        });
-            DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(list);
-            EmployeeModel = SelectedCurentEmployeeDataGrid;
-            EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
-        }
+
         public List<string> CbDismissDate
         {
-            get { 
+            get
+            {
                 return emplDismissList;
             }
-            set {
+            set
+            {
                 emplDismissList = value;
                 OnPropertyChanged("CbDismissDate");
-            }          
+            }
         }
         private string SelectFire;
         public string CbDismissDateSelected
@@ -336,14 +329,14 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             }
         }
 
-        private int _selectIndexDataGrid;
-        public int SelectIndexDataGrid
+        private int _selectIndexEmployeeDataGrid;
+        public int SelectIndexEmployeeDataGrid
         {
-            get { return _selectIndexDataGrid; }
+            get { return _selectIndexEmployeeDataGrid; }
             set
             {
-                _selectIndexDataGrid = value;
-                OnPropertyChanged("SelectIndexDataGrid");
+                _selectIndexEmployeeDataGrid = value;
+                OnPropertyChanged("SelectIndexEmployeeDataGrid");
             }
         }
 
@@ -351,24 +344,70 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             get { return EmployeeModel; }
             set
-            {           
-                    if (value != null)
-                    {
-                        EmployeeModel = value;
-                    }
-                    else
-                    {
-                        EmployeeModel = new EmployeeViewDTO();
-                    }           
-                InsertTextBoxEmployeeInformation(EmployeeModel);
+            {
+                if (value != null)
+                {
+                    EmployeeModel = value;
+                    InsertTextBoxEmployeeInformation(EmployeeModel);
+                }
+
             }
         }
+        //--------------DataGridContract--------------       
+        public ObservableCollection<ContractViewDTO> DataGridListContracts
+        {
+            get { return DgListContracts; }
+            set
+            {
+                DgListContracts = value;
+                OnPropertyChanged("DataGridListContracts");
+            }
+        }
+
+        private int _selectIndexContractDataGrid;
+        public int SelectIndexContractDataGrid
+        {
+            get { return _selectIndexContractDataGrid; }
+            set
+            {
+                _selectIndexContractDataGrid = value;
+                OnPropertyChanged("SelectIndexContractDataGrid");
+            }
+        }
+
+        public ContractViewDTO SelectedCurentContractDataGrid
+        {
+            get { return ContractModel; }
+            set
+            {
+                if (value != null)
+                {
+                    ContractModel = value;
+                }
+
+            }
+        }
+
+        #endregion
+
+        private async void FilterByPost(int postId)
+        {
+            List<EmployeeViewDTO> list = await new EmployeeService().FilterEmployeesRecord(
+                                        new EmployeeFilterModel
+                                        {
+                                            EmployeePostID = postId
+                                        });
+            DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(list);
+            EmployeeModel = SelectedCurentEmployeeDataGrid;
+            EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
+        }
+        
 
         private void InsertTextBoxEmployeeInformation(EmployeeViewDTO employeeModel)
         {
             EmployeePropertyViewModel = EmployeePropertyViewModel ?? new PersonPropertyViewModel<EmployeeDTO>(employeeModel);
             EmployeePropertyViewModel.InsertComboboxPersonInformation(employeeModel.Person);
-            EmployeePropertyViewModel.AddressViewModel.InsertComboboxAddressInformation(employeeModel.Address);
+            EmployeePropertyViewModel.AddressViewModel.InsertComboboxAddressInformation(employeeModel.AddressView);
 
             SelectedPostId = employeeModel.Person.EmployeePostID;
             SelectedStatusId = employeeModel.Person.EmployeeStatusID;
@@ -410,9 +449,11 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 Statuses = ToObservableCollection<EmployeeStatusDTO>(await new EmployeeStatusService().GetAllStatuses());
                 DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(listEmployees);
                 //EmployeeModel = SelectedCurentEmployeeDataGrid;
-                SelectIndexDataGrid = 0;
-                EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
+                SelectIndexEmployeeDataGrid = 0;
+                EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid ?? new EmployeeViewDTO());
                 AccessFildsAndButton(false);
+                DataGridListContracts = ToObservableCollection<ContractViewDTO>(await new ContractService().GetAllContractsView());
+                SelectIndexContractDataGrid = 0;
             }
         }
         private async void EmploymentEmployee()
@@ -442,7 +483,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             emp.EmployeePostID = SelectedPostId;
             emp.EmployeeStatusID = SelectedStatusId;
             await new EmployeeService().UpdateEmployeeRecord(emp);
-            await new AddressService().UpdateAddressRecord(EmployeePropertyViewModel.AddressViewModel.GetAddressModel);
+            await new AddressService().UpdateAddressRecord(EmployeePropertyViewModel.AddressViewModel.GetAddressModel.Address);
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
         
@@ -459,7 +500,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                                 EmployeePostID = SelectedFilterPostId !=0? SelectedFilterPostId:0
                             });
             DataGridListEmployees = ToObservableCollection<EmployeeViewDTO>(list);
-            SelectIndexDataGrid = 0;
+            SelectIndexEmployeeDataGrid = 0;
             //EmployeeModel = SelectedCurentEmployeeDataGrid;
             EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(SelectedCurentEmployeeDataGrid);
         }
@@ -469,7 +510,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             IsEnableNewBtn = true;            
             BtnNewEmployeeVisibility = "Hidden";
             BtnSaveNewEmployeeVisibility = "Visible";
-            EmployeeModel = new EmployeeViewDTO {Address=new AddressDTO(),Person= new EmployeeDTO(),Dismisses=new List<EmployeeDismissDTO>() };
+            EmployeeModel = new EmployeeViewDTO {AddressView=new AddressViewDTO(),Person= new EmployeeDTO(),Dismisses=new List<EmployeeDismissDTO>() };
             EmployeePropertyViewModel = new PersonPropertyViewModel<EmployeeDTO>(EmployeeModel);
             InsertTextBoxEmployeeInformation(EmployeeModel);
             TbPasswordVisibility = Visibility.Visible;

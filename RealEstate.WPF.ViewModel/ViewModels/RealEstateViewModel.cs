@@ -130,6 +130,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 OnPropertyChanged("cbFilterTypeIdSelected");
             }
         }
+        
+        
         public int? cbFilterClassIdSelected
         {
             get { return RealEstateFilter.RealEstateClassID; }
@@ -285,22 +287,21 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             get { return RealEstateView; }
             set
-            {
-                if (RealEstateDataGridSource.Count != 0)
-                {
-                    if (value != null)
-                    {
-                        RealEstateView = value;
-                    }
-                    else
-                    {
-                        RealEstateView = new RealEstateViewDTO();
-                    }
-                }
-                else RealEstateView = new RealEstateViewDTO();
-                RealEstatePropertyViewModel.InsertTextBoxRealEstateInformation(RealEstateView);
-                OnPropertyChanged("RealEstateDataGridSelected");
+            {               
+               if (value != null)
+               {
+                 RealEstateView = value;
+                 InsertTextBoxRealEstateInformation(RealEstateView);
+
+               }                                 
+                
             }
+        }
+        public void InsertTextBoxRealEstateInformation(RealEstateViewDTO realestate)
+        {
+            RealEstatePropertyViewModel = RealEstatePropertyViewModel ?? new RealEstatePropertyViewModel(realestate);
+            RealEstatePropertyViewModel.InsertTextBoxRealEstateInformation(realestate);
+            RealEstatePropertyViewModel.AddressViewModel.InsertComboboxAddressInformation(realestate.AddressView);
         }
         #endregion
         protected void OnPropertyChanged(string PropertyName)
@@ -357,8 +358,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         private async void SaveChangedRecord()
         {
             AccessFildsAndButton(false, "Visible", "Hidden");
-            LBoxNotification = (await new RealEstateService().UpdateRealEstateRecord(RealEstateView.RealEstate)).Errors;
-            await new AddressService().UpdateAddressRecord(RealEstateView.Address);
+            LBoxNotification = (await new RealEstateService().UpdateRealEstateRecord(RealEstatePropertyViewModel.GetRealEstate.RealEstate)).Errors;
+            await new AddressService().UpdateAddressRecord(RealEstatePropertyViewModel.AddressViewModel.GetAddressModel.Address);
             ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
         private string _changeVisibilityMode;
@@ -391,8 +392,9 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                 
                 list = await new RealEstateService().GetAllRealEstates();
                 RealEstateDataGridSource = ToObservableCollection<RealEstateViewDTO>(list);
-                RealEstateView = RealEstateDataGridSelected;
-                RealEstatePropertyViewModel = new RealEstatePropertyViewModel(RealEstateDataGridSelected);
+                //RealEstateView = RealEstateDataGridSelected;
+                SelectIndexDataGrid = 0;
+                RealEstatePropertyViewModel = new RealEstatePropertyViewModel(RealEstateDataGridSelected??new RealEstateViewDTO());
             }
         }
         private void BtnNext()
@@ -419,6 +421,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels
                                     RealEstateFilter =new RealEstateFilterModel() { RealEstateStatusID = CheckedAccessState ? 1 : 2 },
                                     AddressFilter = AddressFilter }));
             RealEstateDataGridSource = listFilterRealEstate;
+            SelectIndexDataGrid = 0;
             RealEstateView = listFilterRealEstate.FirstOrDefault();
         }
 

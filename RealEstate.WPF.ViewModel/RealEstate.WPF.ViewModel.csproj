@@ -51,7 +51,6 @@
     <Compile Include="Infrastructure\BooleanToVisibilityConverter.cs" />
     <Compile Include="ViewModels\DataGridPropertyViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel\AddressPropertyViewModel.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ClientViewModel.cs" />
     <Compile Include="ViewModels\ContractViewModel.cs" />
     <Compile Include="Infrastructure\DelegateCommand.cs" />

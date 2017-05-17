@@ -24,25 +24,38 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
 
         public RealEstatePropertyViewModel(RealEstateViewDTO realEstateModel)
         {
-            RealEstateModel = realEstateModel;            
-           ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
+            AddressViewModel = AddressViewModel ?? new AddressPropertyViewModel(realEstateModel.AddressView);
+            RealEstateModel = realEstateModel ?? new RealEstateViewDTO();
+
+            InsertTextBoxRealEstateInformation(RealEstateModel);
+            AddressViewModel.InsertComboboxAddressInformation(realEstateModel.AddressView);
+            ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
         }
-        public RealEstateViewDTO GetRealEstate { get {
+        public RealEstateViewDTO GetRealEstate {
+            get {
                 RealEstateModel.RealEstate.RealEstateStatusID = 1;
-                return RealEstateModel; } }
+                return RealEstateModel;
+            }
+        }
+        public AddressPropertyViewModel AddressViewModel
+        {
+            get { return AddressModel; }
+            set
+            {
+                AddressModel = value;
+                OnPropertyChanged("AddressViewModel");
+            }
+        }
         private async void InokeAsyncMethods(Object state)
         {
             cbClassesSource = ToObservableCollection<RealEstateClassDTO>(await new RealEstateClassService().GetAllRealEstateClasses());
             cbStatusesSource = ToObservableCollection<RealEstateStatusDTO>(await new RealEstateStatusService().GetAllRealEstateStatuses());
             cbTypesSource = ToObservableCollection<RealEstateTypeDTO>(await new RealEstateTypeService().GetAllRealEstateTypes());
-            cbTypeWallsSource = ToObservableCollection<RealEstateTypeWallDTO>(await new RealEstateTypeWallService().GetAllRealEstateTypeWalls());
-            InsertTextBoxRealEstateInformation(RealEstateModel);            
+            cbTypeWallsSource = ToObservableCollection<RealEstateTypeWallDTO>(await new RealEstateTypeWallService().GetAllRealEstateTypeWalls());                      
         }
 
         public void InsertTextBoxRealEstateInformation(RealEstateViewDTO realEstate)
-        {
-            AddressViewModel = AddressViewModel ?? new AddressPropertyViewModel(realEstate.Address);
-            realEstate = realEstate ?? new RealEstateViewDTO();           
+        {           
             cbTypeIdSelected = realEstate.RealEstate.RealEstateTypeID;
             cbStatusIdSelected = realEstate.RealEstate.RealEstateStatusID;
             cbTypeWallIdSelected = realEstate.RealEstate.RealEstateTypeWallID;
@@ -53,10 +66,8 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
             TbGrossArea = realEstate.RealEstate.GrossArea;
             TbNearSubway = realEstate.RealEstate.NearSubway;
             CheckElevator = realEstate.RealEstate.Elevator;
-            AddressViewModel.InsertComboboxAddressInformation(realEstate.Address);
-
         }
-
+        
         private ObservableCollection<T> ToObservableCollection<T>(List<T> list)
         {
             var observList = new ObservableCollection<T>();
@@ -198,16 +209,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
                 RealEstateModel.RealEstate.RealEstateClassID = value;
                 OnPropertyChanged("cbClassIdSelected");
             }
-        }
-        public AddressPropertyViewModel AddressViewModel
-        {
-            get { return AddressModel; }
-            set
-            {
-                AddressModel = value;
-                OnPropertyChanged("AddressViewModel");
-            }
-        }
+        }        
 
         protected void OnPropertyChanged(string PropertyName)
         {

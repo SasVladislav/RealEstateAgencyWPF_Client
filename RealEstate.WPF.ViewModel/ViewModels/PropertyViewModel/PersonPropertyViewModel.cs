@@ -18,10 +18,10 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         public PersonPropertyViewModel(AbstractPersonViewModel<T> userViewModel)
         {
             PersonModel = userViewModel.Person as PersonAbstractDTO;
-            AddressViewModel = AddressViewModel ?? new AddressPropertyViewModel(userViewModel.Address);
+            AddressViewModel = AddressViewModel ?? new AddressPropertyViewModel(userViewModel.AddressView);
             
             InsertComboboxPersonInformation(PersonModel);
-            AddressViewModel.InsertComboboxAddressInformation(userViewModel.Address);
+            AddressViewModel.InsertComboboxAddressInformation(userViewModel.AddressView);
         }
         public PersonAbstractDTO GetPerson {
             get

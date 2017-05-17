@@ -31,12 +31,12 @@ namespace RealEstate.WPF.ViewModel.ViewModels
             {
                 middleModel = value;
 
-                PersonViewModel = new PersonPropertyViewModel<UserDTO>(MiddleModel.User ?? new UserViewDTO() {Person = new UserDTO(), Address =new AddressDTO() });               
-                RealEstatePropertyModel = new RealEstatePropertyViewModel(MiddleModel.RealEstate ?? new RealEstateViewDTO { RealEstate = new RealEstateDTO(), Address = new AddressDTO() });
-                RealEstatePropertyViewModel.InsertTextBoxRealEstateInformation(MiddleModel.RealEstate ?? new RealEstateViewDTO { RealEstate = new RealEstateDTO(), Address = new AddressDTO() });
+                PersonViewModel = new PersonPropertyViewModel<UserDTO>(MiddleModel.User ?? new UserViewDTO() {Person = new UserDTO(), AddressView =new AddressViewDTO() });               
+                RealEstatePropertyModel = new RealEstatePropertyViewModel(MiddleModel.RealEstate ?? new RealEstateViewDTO { RealEstate = new RealEstateDTO(), AddressView = new AddressViewDTO() });
+                //RealEstatePropertyViewModel.InsertTextBoxRealEstateInformation(MiddleModel.RealEstate ?? new RealEstateViewDTO { RealEstate = new RealEstateDTO(), Address = new AddressDTO() });
                 if (middleModel.Employee != null)
                 {
-                    PersonViewEmployeeModel = new PersonPropertyViewModel<EmployeeDTO>(MiddleModel.Employee??new EmployeeViewDTO {Person=new EmployeeDTO(),Address=new AddressDTO(),Dismisses=new List<EmployeeDismissDTO>() });
+                    PersonViewEmployeeModel = new PersonPropertyViewModel<EmployeeDTO>(MiddleModel.Employee??new EmployeeViewDTO {Person=new EmployeeDTO(),AddressView=new AddressViewDTO(),Dismisses=new List<EmployeeDismissDTO>() });
                     ThreadPool.QueueUserWorkItem(InokeAsyncMethods);
                 }                                
             }
@@ -170,12 +170,23 @@ namespace RealEstate.WPF.ViewModel.ViewModels
         {
             Contract.EmployeeID = MiddleModel.Employee.Person.PersonId;
 
-            Contract.SellerID = MiddleModel.User!=null? MiddleModel.User.Person.PersonId:await new UserService().CreateUser(new UserViewDTO() {
-                                                                                                                                                Person =(UserDTO)PersonViewModel.GetPerson,
-                                                                                                                                                Address=PersonViewModel.AddressViewModel.GetAddressModel});
+            Contract.SellerID = MiddleModel.User!=null?
+                                    MiddleModel.User.Person.PersonId:
+                                    await new UserService()
+                                            .CreateUser(new UserViewDTO()
+                                                        {
+                                                        Person =(UserDTO)PersonViewModel.GetPerson,
+                                                        AddressView=PersonViewModel.AddressViewModel.GetAddressModel
+                                                        });
 
-            Contract.RealEstateID = MiddleModel.RealEstate != null ? MiddleModel.RealEstate.RealEstate.RealEstateID : await new RealEstateService().CreateRealEstate(
-                                                                                                                                                RealEstatePropertyViewModel.GetRealEstate);
+            Contract.RealEstateID = MiddleModel.RealEstate != null?
+                                            MiddleModel.RealEstate.RealEstate.RealEstateID:
+                                            await new RealEstateService()
+                                                    .CreateRealEstate(new RealEstateViewDTO()
+                                                          {
+                                                          RealEstate = RealEstatePropertyViewModel.GetRealEstate.RealEstate,
+                                                          AddressView = RealEstatePropertyViewModel.AddressViewModel.GetAddressModel
+                                                          });
 
             await new ContractService().CreateContract(Contract);
         }

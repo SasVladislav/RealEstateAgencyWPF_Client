@@ -166,28 +166,28 @@
         <DataGrid IsEnabled="{Binding BtnViewMode}" AutoGenerateColumns="False" SelectedIndex="{Binding SelectIndexDataGrid}"  SelectedItem="{Binding RealEstateDataGridSelected}" EnableRowVirtualization="True" Height="274" HorizontalAlignment="Left" ItemsSource="{Binding RealEstateDataGridSource}" Margin="7,33,0,0" x:Name="nedvigimostDataGrid" RowDetailsVisibilityMode="VisibleWhenSelected" VerticalAlignment="Top" Width="756" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn
-                 Binding="{Binding SelectedItem.RealEstateTypeName, ElementName=cbTypeN}"
+                 Binding="{Binding RealEstateType.RealEstateTypeName}"
                  x:Name="idTypeNedvigimostiColumn"  Header="Тип Недвижимости" Width="80" />
                 <DataGridTextColumn x:Name="priceColumn" Binding="{Binding RealEstate.Price}" Header="Цена" Width="70" />
                 <DataGridTextColumn
-                 Binding="{Binding SelectedItem.RealEstateTypeWallName, ElementName=cbTypeW}"
+                 Binding="{Binding RealEstateTypeWall.RealEstateTypeWallName}"
                  x:Name="idTypeWallColumn" Header="Тип стен" Width="SizeToHeader" />
                 <DataGridTextColumn x:Name="grossAreaColumn" Binding="{Binding RealEstate.GrossArea}" Header="Общ. пл." Width="60" />
                 <DataGridTextColumn x:Name="nearSuswayColumn" Binding="{Binding RealEstate.NearSubway}" Header="Близость к метро" Width="SizeToHeader" />
                 <DataGridTextColumn
-                 Binding="{Binding SelectedItem.RealEstateClassName, ElementName=cbClass}"
+                 Binding="{Binding RealEstateClass.RealEstateClassName}"
                  x:Name="idClassHomeColumn" Header="Класс Недв" Width="SizeToHeader" />
                 <DataGridTextColumn
-                 Binding="{Binding SelectedItem.AddressCityName, ElementName=cbxCity}"
+                 Binding="{Binding AddressView.AddressCity.AddressCityName}"
                  x:Name="cityColumn" Header="Город" Width="70" />
                 <DataGridTextColumn
-                 Binding="{Binding SelectedItem.AddressRegionName, ElementName=cbxRegion}"
+                 Binding="{Binding AddressView.AddressRegion.AddressRegionName}"
                  x:Name="regionColumn" Header="Район" Width="70" />
                 <DataGridTextColumn
-                 Binding="{Binding SelectedItem.AddressStreetName, ElementName=cbxStreet}"
+                 Binding="{Binding AddressView.AddressStreet.AddressStreetName}"
                  x:Name="streetColumn" Header="Улица" Width="70" />
                 <DataGridTextColumn
-                 Binding="{Binding SelectedItem.RealEstateStatusName, ElementName=cbState}"
+                 Binding="{Binding RealEstateStatus.RealEstateStatusName}"
                  x:Name="statusColumn" Header="Статус" Width="80" />
             </DataGrid.Columns>
         </DataGrid>

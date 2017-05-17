@@ -103,6 +103,8 @@
     <Compile Include="Models\ModelDTO\LoginDto.cs" />
     <Compile Include="Models\ModelFilters\LoginFilterModel.cs" />
     <Compile Include="Models\ModelViewDTO\AbstractPersonViewModel.cs" />
+    <Compile Include="Models\ModelViewDTO\AddressViewDTO.cs" />
+    <Compile Include="Models\ModelViewDTO\ContractViewDTO.cs" />
     <Compile Include="Models\ModelViewDTO\EmployeeViewDTO.cs" />
     <Compile Include="Models\ModelViewDTO\RealEstateFilterViewDTO.cs" />
     <Compile Include="Models\OperationDetails.cs" />
@@ -146,7 +148,6 @@
     <Compile Include="Services\RealEstateTypeWallService.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Services\LocalServices\UserServiceLocal.cs" />
-    <Compile Include="Services\MainWindowService.cs" />
     <Compile Include="Services\SendToServerService.cs" />
   </ItemGroup>
   <ItemGroup>

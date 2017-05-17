@@ -9,7 +9,7 @@ namespace RealEstate.WPF.Model.Models.ModelViewDTO
 {
     public abstract class AbstractPersonViewModel<T>
     {
-        public AddressDTO Address { get; set; }
+        public AddressViewDTO AddressView { get; set; }
         public T Person { get; set; }
     }
 }

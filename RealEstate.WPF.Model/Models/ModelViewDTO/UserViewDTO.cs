@@ -12,7 +12,7 @@ namespace RealEstate.WPF.Model.Models.ModelViewDTO
         public UserViewDTO() 
         {
             Person = new UserDTO();
-            Address = new AddressDTO();
+            AddressView = new AddressViewDTO();
         }
 
     }

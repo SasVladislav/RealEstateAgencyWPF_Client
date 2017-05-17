@@ -1,4 +1,5 @@
 ﻿using RealEstate.WPF.Model.Models.ModelDTO;
+using RealEstate.WPF.Model.Models.ModelViewDTO;
 using RealEstate.WPF.Model.Services;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,14 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
 {
     public class AddressPropertyViewModel : INotifyPropertyChanged
     {
-        private AddressDTO AddressModel;
+        private AddressViewDTO AddressModel;
         private ObservableCollection<AddressCityDTO> citiesList = new ObservableCollection<AddressCityDTO>();
         private ObservableCollection<AddressRegionDTO> regionsList = new ObservableCollection<AddressRegionDTO>();
         private ObservableCollection<AddressStreetDTO> streetsList = new ObservableCollection<AddressStreetDTO>();
         public AddressPropertyViewModel(){}
-        public AddressPropertyViewModel(AddressDTO addressModel)
+        public AddressPropertyViewModel(AddressViewDTO addressModel)
         {
-            AddressModel = addressModel ?? new AddressDTO();
+            AddressModel = addressModel ?? new AddressViewDTO();
             ThreadPool.QueueUserWorkItem(InvokeAsync);
         }
         private async void InvokeAsync(Object state)
@@ -32,7 +33,7 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         }
         //-------------------Comboboxes
 
-        public AddressDTO GetAddressModel
+        public AddressViewDTO GetAddressModel
         {
             get{return AddressModel;}
         }
@@ -48,10 +49,10 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
 
         public int SelectedCityId
         {
-            get { return AddressModel.AddressCityID; }
+            get { return AddressModel.Address.AddressCityID; }
             set
             {
-                AddressModel.AddressCityID = value;
+                AddressModel.Address.AddressCityID = value;
                 OnPropertyChanged("SelectedCityId");
             }
         }
@@ -68,10 +69,10 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
         }
         public int SelectedRegionId
         {
-            get { return AddressModel.AddressRegionID; }
+            get { return AddressModel.Address.AddressRegionID; }
             set
             {
-                AddressModel.AddressRegionID = value;
+                AddressModel.Address.AddressRegionID = value;
                 OnPropertyChanged("SelectedRegionId");
             }
         }
@@ -88,29 +89,57 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
 
         public int SelectedStreetId
         {
-            get { return AddressModel.AddressStreetID; }
+            get { return AddressModel.Address.AddressStreetID; }
             set
             {
-                AddressModel.AddressStreetID = value;
+                AddressModel.Address.AddressStreetID = value;
                 OnPropertyChanged("SelectedStreetId");
+            }
+        }
+
+        public AddressCityDTO CityObject
+        {
+            get { return AddressModel.AddressCity; }
+            set
+            {
+                AddressModel.AddressCity = value;
+                OnPropertyChanged("CityObject");
+            }
+        }
+        public AddressRegionDTO RegionObject
+        {
+            get { return AddressModel.AddressRegion; }
+            set
+            {
+                AddressModel.AddressRegion = value;
+                OnPropertyChanged("RegionObject");
+            }
+        }
+        public AddressStreetDTO StreetObject
+        {
+            get { return AddressModel.AddressStreet; }
+            set
+            {
+                AddressModel.AddressStreet = value;
+                OnPropertyChanged("StreetObject");
             }
         }
         public string TbHomeNumber
         {
-            get { return AddressModel.HomeNumber; }
+            get { return AddressModel.Address.HomeNumber; }
             set
             {
-                AddressModel.HomeNumber = value;
+                AddressModel.Address.HomeNumber = value;
                 OnPropertyChanged("TbHomeNumber");
             }
         }
 
         public int? TbApartmentNumber
         {
-            get { return AddressModel.ApartmentNumber; }
+            get { return AddressModel.Address.ApartmentNumber; }
             set
             {
-                AddressModel.ApartmentNumber = value;
+                AddressModel.Address.ApartmentNumber = value;
                 OnPropertyChanged("TbApartmentNumber");
             }
         }
@@ -132,14 +161,17 @@ namespace RealEstate.WPF.ViewModel.ViewModels.PropertyViewModel
                 observList.Add(item);
             return observList;
         }
-        public void InsertComboboxAddressInformation(AddressDTO address)
+        public void InsertComboboxAddressInformation(AddressViewDTO address)
         {
-            address = address ?? new AddressDTO();
-            SelectedCityId = address.AddressCityID;
-            SelectedRegionId = address.AddressRegionID;
-            SelectedStreetId = address.AddressStreetID;
-            TbHomeNumber = address.HomeNumber;
-            TbApartmentNumber = address.ApartmentNumber;
+            address = address ?? new AddressViewDTO();
+            this.SelectedCityId = address.Address.AddressCityID;
+            this.SelectedRegionId = address.Address.AddressRegionID;
+            this.SelectedStreetId = address.Address.AddressStreetID;
+            this.TbHomeNumber = address.Address.HomeNumber;
+            this.TbApartmentNumber = address.Address.ApartmentNumber;
+            this.CityObject = address.AddressCity;
+            this.RegionObject = address.AddressRegion;
+            this.StreetObject = address.AddressStreet;
         }
     }
 }
